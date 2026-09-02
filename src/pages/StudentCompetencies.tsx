@@ -36,7 +36,7 @@ export const StudentCompetencies: React.FC = () => {
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight">{profile?.full_name}</h1>
           <p className="text-xs sm:text-sm text-slate-300 mt-1">
-            NIS: <strong>{profile?.nis_nip}</strong> &bull; Kelas: <strong>{profile?.class_name || 'XI TKR 1'}</strong> &bull; Kompetensi Keahlian Teknik Kendaraan Ringan
+            NISN: <strong>{profile?.nis_nip}</strong> &bull; Kelas: <strong>{profile?.class_name}</strong>
           </p>
         </div>
 

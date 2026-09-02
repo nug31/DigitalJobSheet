@@ -173,7 +173,7 @@ export const Login: React.FC = () => {
         </div>
 
         <p className="text-center text-xs text-slate-400 font-medium pt-2">
-          Teknik Kendaraan Ringan Otomotif &bull; SMK Mitra Industri &copy; 2025
+          SMK Mitra Industri &copy; 2025
         </p>
       </div>
     </div>

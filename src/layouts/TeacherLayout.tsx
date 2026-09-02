@@ -122,7 +122,7 @@ export const TeacherLayout: React.FC<{ children: React.ReactNode }> = ({ childre
               </div>
               <div className="min-w-0">
                 <p className="text-xs font-bold text-slate-800 truncate">{profile?.full_name}</p>
-                <p className="text-[10px] text-slate-400 font-medium">Guru Produktif TKR</p>
+                <p className="text-[10px] text-slate-400 font-medium">Guru Produktif</p>
               </div>
             </div>
           ) : (

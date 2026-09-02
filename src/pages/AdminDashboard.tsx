@@ -361,7 +361,7 @@ export const AdminDashboard: React.FC = () => {
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <div>
-                  <h2 className="text-xl font-black text-slate-900">Daftar Kelas Bengkel TKR</h2>
+                  <h2 className="text-xl font-black text-slate-900">Daftar Kelas</h2>
                   <p className="text-slate-500 text-xs">Kelola rombongan belajar dan wali kelas</p>
                 </div>
                 <button
