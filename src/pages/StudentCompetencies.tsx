@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Storage, subscribeStorage } from '../lib/storage';
-import { Award, CheckCircle2, Printer, Star, ShieldCheck, ChevronRight } from 'lucide-react';
+import { Award, CheckCircle2, Printer, ShieldCheck, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export const StudentCompetencies: React.FC = () => {
@@ -75,57 +75,7 @@ export const StudentCompetencies: React.FC = () => {
           <p className="text-lg font-black text-emerald-600 mt-2 flex items-center justify-center gap-1">
             <ShieldCheck className="w-5 h-5" /> SIAP MAGANG
           </p>
-          <span className="text-[11px] text-slate-500 font-medium">Industri Otomotif</span>
-        </div>
-      </div>
-
-      {/* Competency Skill Badges Matrix */}
-      <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-100 space-y-6">
-        <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
-          <Star className="w-5 h-5 text-amber-500" /> Matriks Standar Kompetensi Kerja (SKKNI Otomotif)
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {[
-            {
-              title: 'Penggunaan Alat Ukur Presisi (PDTO)',
-              code: 'OTO.KR01.001.01',
-              level: 'Keahlian Dasar',
-              status: 'Kompeten (Skor 93)',
-              badge: 'bg-emerald-100 text-emerald-800'
-            },
-            {
-              title: 'Perawatan Sistem Rem Cakram (PSPTKR)',
-              code: 'OTO.KR02.010.01',
-              level: 'Keahlian Menengah',
-              status: 'Sedang Proses Penilaian',
-              badge: 'bg-amber-100 text-amber-800'
-            },
-            {
-              title: 'Perakitan Rangkaian Kelistrikan Bodi (PKKR)',
-              code: 'OTO.KR05.002.01',
-              level: 'Keahlian Lanjut',
-              status: 'Belum Diuji',
-              badge: 'bg-slate-100 text-slate-600'
-            },
-            {
-              title: 'Penerapan K3 dan 5S Bengkel Otomotif',
-              code: 'OTO.KR01.009.01',
-              level: 'Sikap Kerja & K3',
-              status: 'Kompeten (Skor 95)',
-              badge: 'bg-emerald-100 text-emerald-800'
-            }
-          ].map((item, idx) => (
-            <div key={idx} className="p-4 bg-slate-50 rounded-xl border border-slate-200 flex items-start justify-between gap-3">
-              <div>
-                <span className="text-[11px] font-bold text-blue-600 block">{item.code} &bull; {item.level}</span>
-                <p className="font-bold text-sm text-slate-900 mt-0.5">{item.title}</p>
-              </div>
-              <span className={`px-2.5 py-1 rounded-full text-xs font-bold shrink-0 ${item.badge}`}>
-                {item.status}
-              </span>
-            </div>
-          ))}
+          <span className="text-[11px] text-slate-500 font-medium">Praktik Industri</span>
         </div>
       </div>
 
