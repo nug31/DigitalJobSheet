@@ -7,7 +7,7 @@ export const DEMO_ACCOUNTS = [
     profile: {
       id: 'demo-admin-001',
       role: 'admin' as const,
-      full_name: 'Bpk. Hendra Wijaya, M.Kom',
+      full_name: 'LNorris',
       nis_nip: '19800101001',
       email: 'admin@mitra.sch.id',
       avatar_url: null,
@@ -21,7 +21,7 @@ export const DEMO_ACCOUNTS = [
     profile: {
       id: 'demo-teacher-001',
       role: 'teacher' as const,
-      full_name: 'Bpk. Andi Santoso, S.Pd',
+      full_name: 'Joko Setyo Nugroho, S.T',
       nis_nip: '19850315002',
       email: 'guru@mitra.sch.id',
       avatar_url: null,
@@ -33,7 +33,7 @@ export const DEMO_ACCOUNTS = [
     profile: {
       id: 'teacher-tkr-001',
       role: 'teacher' as const,
-      full_name: 'Bpk. Andi Santoso, S.Pd',
+      full_name: 'Joko Setyo Nugroho, S.T',
       nis_nip: '19850315002',
       email: 'guru.tkr@mitra.sch.id',
       avatar_url: null,

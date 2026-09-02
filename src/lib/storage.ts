@@ -418,7 +418,7 @@ const DEFAULT_USERS: UserProfile[] = [
   {
     id: 'demo-admin-001',
     role: 'admin',
-    full_name: 'Bpk. Hendra Wijaya, M.Kom (Admin)',
+    full_name: 'LNorris',
     nis_nip: '19800101001',
     email: 'admin@mitra.sch.id',
     avatar_url: null
@@ -426,7 +426,7 @@ const DEFAULT_USERS: UserProfile[] = [
   {
     id: 'demo-teacher-001',
     role: 'teacher',
-    full_name: 'Bpk. Andi Santoso, S.Pd (Guru Produktif TKR)',
+    full_name: 'Joko Setyo Nugroho, S.T',
     nis_nip: '19850315002',
     email: 'guru@mitra.sch.id',
     avatar_url: null
