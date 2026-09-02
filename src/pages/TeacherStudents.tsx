@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Storage, subscribeStorage } from '../lib/storage';
 import { useToast } from '../contexts/ToastContext';
 import type { UserProfile, Submission } from '../types';
+import { ExcelImportModal } from '../components/ExcelImportModal';
 import {
   Search,
   CheckCircle2,
   Clock,
   ChevronRight,
   X,
-  FileSpreadsheet
+  FileSpreadsheet,
+  Upload
 } from 'lucide-react';
 
 export const TeacherStudents: React.FC = () => {
@@ -18,6 +20,7 @@ export const TeacherStudents: React.FC = () => {
   const [search, setSearch] = useState('');
   const [classFilter, setClassFilter] = useState('all');
   const [selectedStudent, setSelectedStudent] = useState<UserProfile | null>(null);
+  const [isImportOpen, setIsImportOpen] = useState(false);
 
   useEffect(() => {
     const update = () => {
@@ -84,12 +87,20 @@ export const TeacherStudents: React.FC = () => {
           </p>
         </div>
 
-        <button
-          onClick={handleExportCSV}
-          className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs sm:text-sm shadow-md shadow-emerald-500/20 transition-all active:scale-95"
-        >
-          <FileSpreadsheet className="w-4 h-4" /> Export Rekap Nilai (CSV)
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsImportOpen(true)}
+            className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs sm:text-sm shadow-md shadow-blue-500/20 transition-all active:scale-95"
+          >
+            <Upload className="w-4 h-4" /> Import Siswa (Excel)
+          </button>
+          <button
+            onClick={handleExportCSV}
+            className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs sm:text-sm shadow-md shadow-emerald-500/20 transition-all active:scale-95"
+          >
+            <FileSpreadsheet className="w-4 h-4" /> Export Nilai (CSV)
+          </button>
+        </div>
       </div>
 
       {/* Filter and Search */}
@@ -268,6 +279,16 @@ export const TeacherStudents: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Excel Import Modal */}
+      <ExcelImportModal
+        isOpen={isImportOpen}
+        onClose={() => setIsImportOpen(false)}
+        onSuccess={() => {
+          setUsers(Storage.getUsers().filter((u) => u.role === 'student'));
+          toast.success('Data Siswa Diperbarui', 'Daftar siswa telah berhasil diperbarui dari file Excel.');
+        }}
+      />
     </div>
   );
 };
