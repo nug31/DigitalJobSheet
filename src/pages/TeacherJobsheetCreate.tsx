@@ -197,6 +197,80 @@ export const TeacherJobsheetCreate: React.FC = () => {
     navigate('/teacher/jobsheets');
   };
 
+  // Image compressor & 200KB validator helper
+  const processAndCompressImage = (file: File, callback: (base64: string) => void) => {
+    const MAX_BYTES = 200 * 1024; // 200 KB
+
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const rawResult = evt.target?.result as string;
+      if (!rawResult) return;
+
+      if (file.size <= MAX_BYTES && !file.type.includes('bmp')) {
+        callback(rawResult);
+        toast.success('Foto Berhasil Dipilih', `Ukuran: ${(file.size / 1024).toFixed(1)} KB (di bawah 200 KB).`);
+        return;
+      }
+
+      // Auto compress using canvas
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        const MAX_DIM = 1200;
+        if (width > MAX_DIM || height > MAX_DIM) {
+          if (width > height) {
+            height = Math.round((height * MAX_DIM) / width);
+            width = MAX_DIM;
+          } else {
+            width = Math.round((width * MAX_DIM) / height);
+            height = MAX_DIM;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          callback(rawResult);
+          return;
+        }
+
+        ctx.drawImage(img, 0, 0, width, height);
+
+        let quality = 0.8;
+        let dataUrl = canvas.toDataURL('image/jpeg', quality);
+
+        while (dataUrl.length * 0.75 > MAX_BYTES && quality > 0.25) {
+          quality -= 0.15;
+          dataUrl = canvas.toDataURL('image/jpeg', quality);
+        }
+
+        const finalSizeKb = Math.round((dataUrl.length * 0.75) / 1024);
+        if (dataUrl.length * 0.75 > MAX_BYTES) {
+          toast.error(
+            'Ukuran Foto Terlalu Besar',
+            `Ukuran foto (${finalSizeKb} KB) melebihi batas 200 KB. Silakan pilih foto dengan resolusi lebih kecil.`
+          );
+          return;
+        }
+
+        callback(dataUrl);
+        toast.success('Foto Dioptimalkan', `Ukuran foto disesuaikan menjadi ${finalSizeKb} KB (Maks 200 KB).`);
+      };
+
+      img.onerror = () => {
+        toast.error('Format Tidak Didukung', 'Gagal memproses file gambar.');
+      };
+
+      img.src = rawResult;
+    };
+
+    reader.readAsDataURL(file);
+  };
+
   return (
     <div className="space-y-6 max-w-4xl mx-auto pb-16">
       {/* Top Bar */}
@@ -597,7 +671,7 @@ export const TeacherJobsheetCreate: React.FC = () => {
                         />
 
                         {/* File Upload Button & Status */}
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
                           <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-bold border border-blue-200 cursor-pointer transition-colors active:scale-95">
                             <Upload className="w-3.5 h-3.5" />
                             <span>Pilih Foto dari Komputer/HP</span>
@@ -608,26 +682,24 @@ export const TeacherJobsheetCreate: React.FC = () => {
                               onChange={(e) => {
                                 const file = e.target.files?.[0];
                                 if (!file) return;
-                                const reader = new FileReader();
-                                reader.onload = (evt) => {
-                                  const base64 = evt.target?.result as string;
-                                  if (base64) {
-                                    updateStep(idx, 'image_url', base64);
-                                    toast.success('Foto Berhasil Dipilih', 'Ilustrasi langkah SOP siap ditampilkan ke siswa.');
-                                  }
-                                };
-                                reader.readAsDataURL(file);
+                                processAndCompressImage(file, (base64) => {
+                                  updateStep(idx, 'image_url', base64);
+                                });
                               }}
                             />
                           </label>
+
+                          <span className="text-[11px] text-slate-500 font-medium">
+                            (Maks 200 KB &bull; JPG/PNG)
+                          </span>
 
                           {step.image_url && (
                             <button
                               type="button"
                               onClick={() => updateStep(idx, 'image_url', '')}
-                              className="px-2.5 py-1.5 bg-rose-50 text-rose-600 rounded-lg text-xs font-semibold hover:bg-rose-100 transition-colors"
+                              className="px-2.5 py-1.5 bg-rose-50 text-rose-600 rounded-lg text-xs font-semibold hover:bg-rose-100 transition-colors ml-auto"
                             >
-                              Hapus Gambar
+                              Hapus Foto
                             </button>
                           )}
                         </div>
