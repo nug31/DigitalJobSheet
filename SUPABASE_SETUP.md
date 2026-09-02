@@ -227,7 +227,46 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Eksekusi pembuatan akun 4 siswa demo:
+-- Fungsi Helper untuk membuat User Guru / Admin
+CREATE OR REPLACE FUNCTION create_staff_account(
+  p_email TEXT,
+  p_password TEXT,
+  p_full_name TEXT,
+  p_role TEXT,
+  p_nip TEXT
+) RETURNS VOID AS $$
+DECLARE
+  v_user_id UUID := gen_random_uuid();
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM auth.users WHERE email = p_email) THEN
+    INSERT INTO auth.users (
+      id, instance_id, email, encrypted_password, email_confirmed_at,
+      raw_app_meta_data, raw_user_meta_data, created_at, updated_at, role, aud
+    ) VALUES (
+      v_user_id, '00000000-0000-0000-0000-000000000000', p_email,
+      crypt(p_password, gen_salt('bf')),
+      NOW(), '{"provider":"email","providers":["email"]}'::jsonb,
+      json_build_object('full_name', p_full_name, 'role', p_role, 'nis_nip', p_nip),
+      NOW(), NOW(), 'authenticated', 'authenticated'
+    );
+
+    INSERT INTO public.profiles (id, full_name, email, nis_nip, role)
+    VALUES (v_user_id, p_full_name, p_email, p_nip, p_role)
+    ON CONFLICT (id) DO NOTHING;
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+-- ─── EKSEKUSI PEMBUATAN AKUN UTAMA ───
+-- 1. Akun Admin
+SELECT create_staff_account('admin@mitra.sch.id', 'admin123', 'Bpk. Hendra Wijaya, M.Kom', 'admin', '19800101001');
+
+-- 2. Akun Guru Produktif TKR
+SELECT create_staff_account('guru@mitra.sch.id', 'guru123', 'Bpk. Andi Santoso, S.Pd', 'teacher', '19850315002');
+SELECT create_staff_account('guru.tkr@mitra.sch.id', 'guru123', 'Bpk. Andi Santoso, S.Pd', 'teacher', '19850315002');
+
+-- 3. Akun Siswa (Ahnaf Abdul Jabbar & Demo Siswa)
+SELECT create_student_account('0106090576', 'AHNAF ABDUL JABBAR', 'X TKR 2');
 SELECT create_student_account('0071234567', 'Muhammad Rizky Pratama', 'XI TKR 1');
 SELECT create_student_account('0071234568', 'Ahmad Fauzi Setiawan', 'XI TKR 1');
 SELECT create_student_account('0071234569', 'Bagas Aditya Nugraha', 'XI TKR 1');
@@ -238,11 +277,10 @@ SELECT create_student_account('0071234570', 'Dwi Putra Prasetyo', 'X TKR 1');
 
 ## 🔑 3. Daftar Akun Siap Pakai:
 
-| Peran | Username / NISN | Password | Nama Siswa / Pengguna |
-| :--- | :--- | :--- | :--- |
-| **Siswa 1** | `0071234567` | `0071234567` | Muhammad Rizky Pratama |
-| **Siswa 2** | `0071234568` | `0071234568` | Ahmad Fauzi Setiawan |
-| **Siswa 3** | `0071234569` | `0071234569` | Bagas Aditya Nugraha |
-| **Siswa 4** | `0071234570` | `0071234570` | Dwi Putra Prasetyo |
-| **Guru** | `guru@mitra.sch.id` | `guru123` | Bpk. Andi Santoso, S.Pd |
-| **Admin** | `admin@mitra.sch.id` | `admin123` | Bpk. Hendra Wijaya, M.Kom |
+| Peran | Username / NISN / Email | Password | Nama Pengguna | Kelas |
+| :--- | :--- | :--- | :--- | :--- |
+| **Siswa (Utama)** | `0106090576` | `0106090576` | AHNAF ABDUL JABBAR | **X TKR 2** |
+| **Siswa Demo 1** | `0071234567` | `0071234567` | Muhammad Rizky Pratama | XI TKR 1 |
+| **Siswa Demo 2** | `0071234568` | `0071234568` | Ahmad Fauzi Setiawan | XI TKR 1 |
+| **Guru Produktif TKR** | `guru@mitra.sch.id` | `guru123` | Bpk. Andi Santoso, S.Pd | - |
+| **Admin Sistem** | `admin@mitra.sch.id` | `admin123` | Bpk. Hendra Wijaya, M.Kom | - |

@@ -418,7 +418,7 @@ const DEFAULT_USERS: UserProfile[] = [
   {
     id: 'demo-admin-001',
     role: 'admin',
-    full_name: 'Bpk. Hendra Wijaya, M.Kom',
+    full_name: 'Bpk. Hendra Wijaya, M.Kom (Admin)',
     nis_nip: '19800101001',
     email: 'admin@mitra.sch.id',
     avatar_url: null
@@ -426,9 +426,18 @@ const DEFAULT_USERS: UserProfile[] = [
   {
     id: 'demo-teacher-001',
     role: 'teacher',
-    full_name: 'Bpk. Andi Santoso, S.Pd',
+    full_name: 'Bpk. Andi Santoso, S.Pd (Guru Produktif TKR)',
     nis_nip: '19850315002',
     email: 'guru@mitra.sch.id',
+    avatar_url: null
+  },
+  {
+    id: 'student-ahnaf-001',
+    role: 'student',
+    full_name: 'AHNAF ABDUL JABBAR',
+    nis_nip: '0106090576',
+    class_name: 'X TKR 2',
+    email: '0106090576@siswa.mitra.sch.id',
     avatar_url: null
   },
   {
@@ -479,6 +488,14 @@ const DEFAULT_CLASSES: ClassItem[] = [
     total_students: 36
   },
   {
+    id: 'cls-1b',
+    name: 'X TKR 2',
+    department: 'Teknik Kendaraan Ringan Otomotif',
+    academic_year: '2024/2025',
+    homeroom_teacher: 'Bpk. Andi Santoso, S.Pd',
+    total_students: 36
+  },
+  {
     id: 'cls-2',
     name: 'XI TKR 1',
     department: 'Teknik Kendaraan Ringan Otomotif',
@@ -492,55 +509,55 @@ const DEFAULT_CLASSES: ClassItem[] = [
     department: 'Teknik Kendaraan Ringan Otomotif',
     academic_year: '2024/2025',
     homeroom_teacher: 'Ibu Ratna Dewi, S.Pd',
-    total_students: 35
+    total_students: 34
   },
   {
     id: 'cls-4',
     name: 'XII TKR 1',
     department: 'Teknik Kendaraan Ringan Otomotif',
     academic_year: '2024/2025',
-    homeroom_teacher: 'Bpk. Agus Salim, M.Pd',
-    total_students: 34
+    homeroom_teacher: 'Bpk. Joko Purnomo, M.T',
+    total_students: 32
   }
 ];
 
 const DEFAULT_SUBJECTS: SubjectItem[] = [
   {
-    id: 'sbj-1',
+    id: 'subj-1',
+    code: 'PSPTKR',
+    name: 'Pemeliharaan Sasis & Pemindah Tenaga (PSPTKR)',
+    description: 'Kompetensi sistem rem, transmisi, kopling, dan suspensi kendaraan ringan.',
+    grade_level: 'Kelas XI & XII'
+  },
+  {
+    id: 'subj-2',
     code: 'PDTO',
-    name: 'Pekerjaan Dasar Teknik Otomotif',
-    description: 'Dasar pengukuran presisi (alat ukur), hand tools, power tools, dan K3 bengkel.',
+    name: 'Pekerjaan Dasar Teknik Otomotif (PDTO)',
+    description: 'Kompetensi penggunaan alat ukur presisi vernier caliper dan micrometer.',
     grade_level: 'Kelas X'
   },
   {
-    id: 'sbj-2',
-    code: 'PSPTKR',
-    name: 'Pemeliharaan Sasis dan Pemindah Tenaga Kendaraan Ringan',
-    description: 'Sistem rem, kopling, transmisi, diferensial, suspensi, dan wheel alignment.',
-    grade_level: 'Kelas XI & XII'
-  },
-  {
-    id: 'sbj-3',
+    id: 'subj-3',
     code: 'PKKR',
-    name: 'Pemeliharaan Kelistrikan Kendaraan Ringan',
-    description: 'Sistem starter, pengisian, pengapian, penerangan, dan AC mobil.',
-    grade_level: 'Kelas XI & XII'
+    name: 'Pemeliharaan Kelistrikan Kendaraan Ringan (PKKR)',
+    description: 'Rangkaian sistem penerangan, relay, wiper, dan motor starter.',
+    grade_level: 'Kelas XI'
   },
   {
-    id: 'sbj-4',
+    id: 'subj-4',
     code: 'PMKR',
-    name: 'Pemeliharaan Mesin Kendaraan Ringan',
+    name: 'Pemeliharaan Mesin Kendaraan Ringan (PMKR)',
     description: 'Tune up, mekanisme katup, sistem pelumasan, dan pendinginan mesin.',
     grade_level: 'Kelas XI & XII'
   }
 ];
 
 const STORAGE_KEYS = {
-  JOBSHEETS: 'mitra_jobsheets_v4',
-  SUBMISSIONS: 'mitra_submissions_v4',
-  USERS: 'mitra_users_v4',
-  CLASSES: 'mitra_classes_v4',
-  SUBJECTS: 'mitra_subjects_v4'
+  JOBSHEETS: 'mitra_jobsheets_v5',
+  SUBMISSIONS: 'mitra_submissions_v5',
+  USERS: 'mitra_users_v5',
+  CLASSES: 'mitra_classes_v5',
+  SUBJECTS: 'mitra_subjects_v5'
 };
 
 // Listeners for reactive updates

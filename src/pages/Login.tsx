@@ -72,14 +72,14 @@ export const Login: React.FC = () => {
           <div className="grid grid-cols-3 gap-2">
             <button
               type="button"
-              onClick={() => handleQuickLogin('0071234567', '0071234567')}
+              onClick={() => handleQuickLogin('0106090576', '0106090576')}
               className="flex flex-col items-center justify-center p-3 rounded-xl border-2 border-blue-100 hover:border-blue-500 bg-blue-50/50 hover:bg-blue-50 transition-all active:scale-95 group text-center"
             >
               <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center mb-1.5 shadow-sm group-hover:scale-105 transition-transform">
                 <GraduationCap className="w-4 h-4" />
               </div>
-              <span className="text-xs font-black text-blue-900">Siswa (NISN)</span>
-              <span className="text-[10px] text-blue-600 font-bold">0071234567</span>
+              <span className="text-xs font-black text-blue-900">Siswa (Ahnaf)</span>
+              <span className="text-[10px] text-blue-600 font-bold">0106090576</span>
             </button>
 
             <button

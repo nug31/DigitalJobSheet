@@ -1,5 +1,6 @@
-// Demo accounts with NISN support
+// Akun terdaftar aplikasi Mitra Digital Job Sheet
 export const DEMO_ACCOUNTS = [
+  // ─── Admin ───────────────────────────────────────────────
   {
     email: 'admin@mitra.sch.id',
     password: 'admin123',
@@ -12,6 +13,8 @@ export const DEMO_ACCOUNTS = [
       avatar_url: null,
     },
   },
+
+  // ─── Guru Produktif TKR ──────────────────────────────────
   {
     email: 'guru@mitra.sch.id',
     password: 'guru123',
@@ -21,6 +24,33 @@ export const DEMO_ACCOUNTS = [
       full_name: 'Bpk. Andi Santoso, S.Pd',
       nis_nip: '19850315002',
       email: 'guru@mitra.sch.id',
+      avatar_url: null,
+    },
+  },
+  {
+    email: 'guru.tkr@mitra.sch.id',
+    password: 'guru123',
+    profile: {
+      id: 'teacher-tkr-001',
+      role: 'teacher' as const,
+      full_name: 'Bpk. Andi Santoso, S.Pd',
+      nis_nip: '19850315002',
+      email: 'guru.tkr@mitra.sch.id',
+      avatar_url: null,
+    },
+  },
+
+  // ─── Siswa Terdaftar ─────────────────────────────────────
+  {
+    email: '0106090576@siswa.mitra.sch.id',
+    password: '0106090576',
+    profile: {
+      id: 'student-ahnaf-001',
+      role: 'student' as const,
+      full_name: 'AHNAF ABDUL JABBAR',
+      nis_nip: '0106090576',
+      class_name: 'X TKR 2',
+      email: '0106090576@siswa.mitra.sch.id',
       avatar_url: null,
     },
   },
@@ -63,6 +93,8 @@ export const DEMO_ACCOUNTS = [
       avatar_url: null,
     },
   },
+
+  // ─── Alias login email lama (backward compat) ────────────
   {
     email: 'siswa@mitra.sch.id',
     password: 'siswa123',
