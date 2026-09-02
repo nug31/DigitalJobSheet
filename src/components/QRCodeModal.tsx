@@ -135,7 +135,7 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({ jobsheet, isOpen, onCl
           </div>
 
           <p className="text-xs text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-200 mb-6 leading-relaxed w-full">
-            Tempelkan QR Code ini pada workstation, meja kerja bengkel, atau bagikan langsung kepada siswa kelas <span className="font-semibold text-blue-700">{jobsheet.target_class}</span>.
+            Tempelkan QR Code ini pada workstation, meja kerja bengkel, atau bagikan langsung kepada seluruh siswa praktikan.
           </p>
 
           {/* Action Buttons */}

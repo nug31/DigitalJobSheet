@@ -193,7 +193,7 @@ export const TeacherDashboard: React.FC = () => {
                 <div className="min-w-0">
                   <span className="text-xs font-black text-blue-600 block">{j.code}</span>
                   <p className="text-xs font-bold text-slate-800 truncate">{j.title}</p>
-                  <span className="text-[10px] text-slate-400">{j.target_class}</span>
+                  <span className="text-[10px] text-slate-400 truncate block">{j.subject}</span>
                 </div>
                 <button
                   onClick={() => setSelectedQRJobsheet(j)}

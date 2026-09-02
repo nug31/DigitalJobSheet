@@ -198,9 +198,6 @@ export const StudentJobsheetDetail: React.FC = () => {
                 <span className="text-xs font-black px-2.5 py-0.5 rounded-lg bg-blue-600 text-white shadow-xs">
                   {jobsheet.code}
                 </span>
-                <span className="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
-                  {jobsheet.target_class}
-                </span>
                 {existingSubmission?.status === 'graded' && (
                   <span className="text-xs font-bold px-2.5 py-0.5 rounded-lg bg-emerald-100 text-emerald-800 flex items-center gap-1">
                     <CheckCircle className="w-3.5 h-3.5" /> Nilai: {existingSubmission.total_score}
