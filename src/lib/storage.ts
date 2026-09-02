@@ -294,7 +294,7 @@ const DEFAULT_CLASSES: ClassItem[] = [
     id: 'cls-1',
     name: 'X TKR 1',
     department: 'Teknik Otomotif',
-    academic_year: '2024/2025',
+    academic_year: '2025/2026',
     homeroom_teacher: 'Bpk. Bambang Sutrisno, S.T',
     total_students: 36
   },
@@ -302,7 +302,7 @@ const DEFAULT_CLASSES: ClassItem[] = [
     id: 'cls-1b',
     name: 'X TKR 2',
     department: 'Teknik Otomotif',
-    academic_year: '2024/2025',
+    academic_year: '2025/2026',
     homeroom_teacher: 'Joko Setyo Nugroho, S.T',
     total_students: 36
   },
@@ -310,7 +310,7 @@ const DEFAULT_CLASSES: ClassItem[] = [
     id: 'cls-2',
     name: 'XI TKR 1',
     department: 'Teknik Otomotif',
-    academic_year: '2024/2025',
+    academic_year: '2025/2026',
     homeroom_teacher: 'Joko Setyo Nugroho, S.T',
     total_students: 36
   }
@@ -341,11 +341,11 @@ const DEFAULT_SUBJECTS: SubjectItem[] = [
 ];
 
 const STORAGE_KEYS = {
-  JOBSHEETS: 'mitra_jobsheets_v6',
-  SUBMISSIONS: 'mitra_submissions_v6',
-  USERS: 'mitra_users_v6',
-  CLASSES: 'mitra_classes_v6',
-  SUBJECTS: 'mitra_subjects_v6'
+  JOBSHEETS: 'mitra_jobsheets_v7',
+  SUBMISSIONS: 'mitra_submissions_v7',
+  USERS: 'mitra_users_v7',
+  CLASSES: 'mitra_classes_v7',
+  SUBJECTS: 'mitra_subjects_v7'
 };
 
 // Listeners for reactive updates

@@ -120,8 +120,8 @@ export const AdminDashboard: React.FC = () => {
     const newClass: ClassItem = {
       id: `cls-${Date.now()}`,
       name: classNameInput.trim(),
-      department: 'Teknik Kendaraan Ringan Otomotif',
-      academic_year: '2024/2025',
+      department: 'Teknik Otomotif',
+      academic_year: '2025/2026',
       homeroom_teacher: classTeacherInput.trim() || 'Guru Produktif',
       total_students: 36
     };

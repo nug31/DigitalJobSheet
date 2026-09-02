@@ -107,7 +107,7 @@ export const Login: React.FC = () => {
         </div>
 
         <p className="text-center text-xs text-slate-400 font-medium mt-6">
-          SMK Mitra Industri &copy; 2025
+          SMK Mitra Industri &copy; 2026
         </p>
       </div>
     </div>
