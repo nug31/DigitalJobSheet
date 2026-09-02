@@ -435,36 +435,36 @@ const DEFAULT_USERS: UserProfile[] = [
     id: 'demo-student-001',
     role: 'student',
     full_name: 'Muhammad Rizky Pratama',
-    nis_nip: '2024001',
+    nis_nip: '0071234567',
     class_name: 'XI TKR 1',
-    email: 'siswa@mitra.sch.id',
+    email: '0071234567@siswa.mitra.sch.id',
     avatar_url: null
   },
   {
     id: 'student-002',
     role: 'student',
     full_name: 'Ahmad Fauzi Setiawan',
-    nis_nip: '2024002',
+    nis_nip: '0071234568',
     class_name: 'XI TKR 1',
-    email: 'ahmad.fauzi@mitra.sch.id',
+    email: '0071234568@siswa.mitra.sch.id',
     avatar_url: null
   },
   {
     id: 'student-003',
     role: 'student',
     full_name: 'Bagas Aditya Nugraha',
-    nis_nip: '2024003',
+    nis_nip: '0071234569',
     class_name: 'XI TKR 1',
-    email: 'bagas.aditya@mitra.sch.id',
+    email: '0071234569@siswa.mitra.sch.id',
     avatar_url: null
   },
   {
     id: 'student-004',
     role: 'student',
     full_name: 'Dwi Putra Prasetyo',
-    nis_nip: '2024004',
+    nis_nip: '0071234570',
     class_name: 'X TKR 1',
-    email: 'dwi.putra@mitra.sch.id',
+    email: '0071234570@siswa.mitra.sch.id',
     avatar_url: null
   }
 ];
@@ -536,11 +536,11 @@ const DEFAULT_SUBJECTS: SubjectItem[] = [
 ];
 
 const STORAGE_KEYS = {
-  JOBSHEETS: 'mitra_jobsheets_v3',
-  SUBMISSIONS: 'mitra_submissions_v3',
-  USERS: 'mitra_users_v3',
-  CLASSES: 'mitra_classes_v3',
-  SUBJECTS: 'mitra_subjects_v3'
+  JOBSHEETS: 'mitra_jobsheets_v4',
+  SUBMISSIONS: 'mitra_submissions_v4',
+  USERS: 'mitra_users_v4',
+  CLASSES: 'mitra_classes_v4',
+  SUBJECTS: 'mitra_subjects_v4'
 };
 
 // Listeners for reactive updates

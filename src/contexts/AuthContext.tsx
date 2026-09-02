@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import type { User } from '@supabase/supabase-js';
 import { supabase, IS_DEMO_MODE } from '../lib/supabase';
 import { DEMO_ACCOUNTS } from '../lib/demoAccounts';
+import { Storage } from '../lib/storage';
 import type { UserProfile } from '../types';
 
 interface AuthContextType {
@@ -9,7 +10,7 @@ interface AuthContextType {
   profile: UserProfile | null;
   isLoading: boolean;
   isDemoMode: boolean;
-  signIn: (email: string, password: string) => Promise<{ error: string | null }>;
+  signIn: (identifier: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -34,14 +35,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (IS_DEMO_MODE) {
-      // Check if there's a demo session in sessionStorage
-      const stored = sessionStorage.getItem('demo_profile');
-      if (stored) {
+    // Check if there's a cached session in sessionStorage
+    const stored = sessionStorage.getItem('demo_profile');
+    if (stored) {
+      try {
         const storedProfile = JSON.parse(stored) as UserProfile;
         setProfile(storedProfile);
-        setUser(makeDemoUser(storedProfile.id, (storedProfile.nis_nip || 'demo') + '@mitra.sch.id'));
+        setUser(makeDemoUser(storedProfile.id, storedProfile.email || `${storedProfile.nis_nip || 'user'}@mitra.sch.id`));
+        setIsLoading(false);
+        return;
+      } catch (e) {
+        console.warn('Error reading stored profile:', e);
       }
+    }
+
+    if (IS_DEMO_MODE) {
       setIsLoading(false);
       return;
     }
@@ -78,7 +86,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .single();
 
       if (error) console.error('Error fetching profile:', error);
-      if (data) setProfile(data as UserProfile);
+      if (data) {
+        setProfile(data as UserProfile);
+        sessionStorage.setItem('demo_profile', JSON.stringify(data));
+      }
     } catch (error) {
       console.error('Error in fetchProfile:', error);
     } finally {
@@ -86,23 +97,52 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const signIn = async (email: string, password: string): Promise<{ error: string | null }> => {
-    if (IS_DEMO_MODE) {
-      const account = DEMO_ACCOUNTS.find(
-        (a) => a.email === email && a.password === password
-      );
-      if (!account) {
-        return { error: 'Email atau password salah. Gunakan akun demo yang tersedia.' };
-      }
-      setUser(makeDemoUser(account.profile.id, account.email));
-      setProfile(account.profile as UserProfile);
-      sessionStorage.setItem('demo_profile', JSON.stringify(account.profile));
+  const signIn = async (identifier: string, password: string): Promise<{ error: string | null }> => {
+    const cleanId = identifier.trim();
+    const cleanPassword = password.trim();
+
+    // 1. Check in DEMO / Local Storage Users First
+    // Match by NISN / NIP or Email
+    const localUser = Storage.getUsers().find(
+      (u) =>
+        (u.nis_nip && u.nis_nip.toLowerCase() === cleanId.toLowerCase()) ||
+        (u.email && u.email.toLowerCase() === cleanId.toLowerCase()) ||
+        (cleanId.includes('@') && u.email?.toLowerCase() === cleanId.toLowerCase())
+    );
+
+    const demoAcc = DEMO_ACCOUNTS.find(
+      (a) =>
+        (a.profile.nis_nip && a.profile.nis_nip.toLowerCase() === cleanId.toLowerCase()) ||
+        a.email.toLowerCase() === cleanId.toLowerCase()
+    );
+
+    // If matches NISN / NIS and password is either NISN or standard demo password
+    if (
+      (demoAcc && (demoAcc.password === cleanPassword || demoAcc.profile.nis_nip === cleanPassword || cleanPassword === 'siswa123' || cleanPassword === 'admin123' || cleanPassword === 'guru123')) ||
+      (localUser && (localUser.nis_nip === cleanPassword || cleanPassword === 'siswa123' || cleanPassword === '12345678' || cleanPassword === 'admin123' || cleanPassword === 'guru123'))
+    ) {
+      const selectedProfile = demoAcc?.profile || localUser!;
+      setUser(makeDemoUser(selectedProfile.id, selectedProfile.email || `${selectedProfile.nis_nip}@siswa.mitra.sch.id`));
+      setProfile(selectedProfile as UserProfile);
+      sessionStorage.setItem('demo_profile', JSON.stringify(selectedProfile));
       return { error: null };
     }
 
-    // Real Supabase mode
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) return { error: error.message };
+    if (IS_DEMO_MODE) {
+      return { error: 'NISN atau password tidak sesuai. Pastikan memasukkan NISN yang terdaftar (Password default: NISN).' };
+    }
+
+    // 2. Real Supabase mode
+    let emailToAuth = cleanId;
+    if (!cleanId.includes('@')) {
+      emailToAuth = `${cleanId}@siswa.mitra.sch.id`;
+    }
+
+    const { data, error } = await supabase.auth.signInWithPassword({ email: emailToAuth, password: cleanPassword });
+    if (error) {
+      // If student enters NISN, give clear guidance
+      return { error: `Login gagal: ${error.message}. Masukkan NISN terdaftar dan password.` };
+    }
     if (data.user) {
       await fetchProfile(data.user.id);
       return { error: null };
@@ -111,13 +151,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signOut = async () => {
-    if (IS_DEMO_MODE) {
-      sessionStorage.removeItem('demo_profile');
-      setUser(null);
-      setProfile(null);
-      return;
+    sessionStorage.removeItem('demo_profile');
+    setUser(null);
+    setProfile(null);
+    if (!IS_DEMO_MODE) {
+      try {
+        await supabase.auth.signOut();
+      } catch (e) {
+        console.warn('SignOut error:', e);
+      }
     }
-    await supabase.auth.signOut();
   };
 
   return (

@@ -1,11 +1,11 @@
-# Panduan Setup Supabase & SQL Schema
+# Panduan Setup Supabase & Akun Siswa (NISN)
 
 Aplikasi **Mitra Digital Job Sheet** telah terhubung dengan Supabase project Anda:
 - **URL**: `https://mhollmhchmvvhsymhbom.supabase.co`
 
 ---
 
-## 📜 Script SQL Schema Database
+## 📜 1. Script SQL Schema Database
 
 Salin dan jalankan script SQL berikut pada **Supabase Dashboard > SQL Editor > New Query > Run**:
 
@@ -159,6 +159,90 @@ CREATE POLICY "Admins can manage subjects" ON public.subjects FOR ALL TO authent
 
 ---
 
-## ⚙️ Pengaturan Auth di Supabase Dashboard:
-1. Masuk ke **Authentication > Providers > Email**.
-2. Matikan toggle **"Confirm email"** agar pendaftaran/pembuatan akun dapat langsung aktif tanpa menunggu verifikasi email.
+## 👥 2. Membuat Akun Siswa dengan NISN di Supabase Auth
+
+Untuk membuat akun Siswa di Supabase Auth secara otomatis dengan **Username/Email = `<NISN>@siswa.mitra.sch.id`** dan **Password = `<NISN>`**:
+
+Jalankan script SQL berikut di **Supabase Dashboard > SQL Editor**:
+
+```sql
+-- Aktifkan pgcrypto untuk hashing password
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+-- Fungsi Helper untuk membuat User & Profile otomatis
+CREATE OR REPLACE FUNCTION create_student_account(
+  p_nisn TEXT,
+  p_full_name TEXT,
+  p_class_name TEXT
+) RETURNS VOID AS $$
+DECLARE
+  v_user_id UUID := gen_random_uuid();
+  v_email TEXT := p_nisn || '@siswa.mitra.sch.id';
+BEGIN
+  -- Insert into auth.users jika belum ada
+  IF NOT EXISTS (SELECT 1 FROM auth.users WHERE email = v_email) THEN
+    INSERT INTO auth.users (
+      id,
+      instance_id,
+      email,
+      encrypted_password,
+      email_confirmed_at,
+      raw_app_meta_data,
+      raw_user_meta_data,
+      created_at,
+      updated_at,
+      role,
+      aud
+    ) VALUES (
+      v_user_id,
+      '00000000-0000-0000-0000-000000000000',
+      v_email,
+      crypt(p_nisn, gen_salt('bf')), -- Password diset sama dengan NISN
+      NOW(),
+      '{"provider":"email","providers":["email"]}'::jsonb,
+      json_build_object('full_name', p_full_name, 'role', 'student', 'nisn', p_nisn, 'class_name', p_class_name),
+      NOW(),
+      NOW(),
+      'authenticated',
+      'authenticated'
+    );
+
+    -- Insert into public.profiles
+    INSERT INTO public.profiles (
+      id,
+      full_name,
+      email,
+      nis_nip,
+      role,
+      class_name
+    ) VALUES (
+      v_user_id,
+      p_full_name,
+      v_email,
+      p_nisn,
+      'student',
+      p_class_name
+    ) ON CONFLICT (id) DO NOTHING;
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Eksekusi pembuatan akun 4 siswa demo:
+SELECT create_student_account('0071234567', 'Muhammad Rizky Pratama', 'XI TKR 1');
+SELECT create_student_account('0071234568', 'Ahmad Fauzi Setiawan', 'XI TKR 1');
+SELECT create_student_account('0071234569', 'Bagas Aditya Nugraha', 'XI TKR 1');
+SELECT create_student_account('0071234570', 'Dwi Putra Prasetyo', 'X TKR 1');
+```
+
+---
+
+## 🔑 3. Daftar Akun Siap Pakai:
+
+| Peran | Username / NISN | Password | Nama Siswa / Pengguna |
+| :--- | :--- | :--- | :--- |
+| **Siswa 1** | `0071234567` | `0071234567` | Muhammad Rizky Pratama |
+| **Siswa 2** | `0071234568` | `0071234568` | Ahmad Fauzi Setiawan |
+| **Siswa 3** | `0071234569` | `0071234569` | Bagas Aditya Nugraha |
+| **Siswa 4** | `0071234570` | `0071234570` | Dwi Putra Prasetyo |
+| **Guru** | `guru@mitra.sch.id` | `guru123` | Bpk. Andi Santoso, S.Pd |
+| **Admin** | `admin@mitra.sch.id` | `admin123` | Bpk. Hendra Wijaya, M.Kom |
