@@ -77,7 +77,7 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({ jobsheet, isOpen, onCl
             <img src="${qrImageUrl}" alt="QR Code" width="240" height="240" />
             <div class="footer-info">
               <div>Scan QR menggunakan Kamera Siswa / Menu Scan</div>
-              <div style="font-size: 10px; color: #94a3b8; margin-top: 4px;">One QR &bull; One Job Sheet &bull; One Skill Record</div>
+              <div style="font-size: 10px; color: #94a3b8; margin-top: 4px;">One QR &bull; One Job Sheet &bull; One Skill Passport</div>
             </div>
           </div>
           <script>

@@ -43,7 +43,7 @@ export const Login: React.FC = () => {
           Mitra Digital Job Sheet
         </h1>
         <p className="mt-1.5 text-xs sm:text-sm text-slate-500 font-medium">
-          One QR &bull; One Job Sheet &bull; One Skill Record
+          One QR &bull; One Job Sheet &bull; One Skill Passport
         </p>
       </div>
 

@@ -15,7 +15,7 @@ export const StudentLayout: React.FC = () => {
   const navItems = [
     { to: '/student/dashboard', icon: Home, label: 'Dashboard' },
     { to: '/student/jobsheets', icon: BookOpen, label: 'Katalog Jobsheet' },
-    { to: '/student/competencies', icon: Award, label: 'Skill Record' }
+    { to: '/student/competencies', icon: Award, label: 'Skill Passport' }
   ];
 
   return (

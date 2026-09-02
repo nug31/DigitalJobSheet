@@ -32,7 +32,7 @@ export const StudentCompetencies: React.FC = () => {
       <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-6 border border-slate-800">
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold mb-3 border border-indigo-500/30">
-            <Award className="w-3.5 h-3.5" /> Transkrip Resmi Skill Record
+            <Award className="w-3.5 h-3.5" /> Transkrip Resmi Skill Passport
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight">{profile?.full_name}</h1>
           <p className="text-xs sm:text-sm text-slate-300 mt-1">
