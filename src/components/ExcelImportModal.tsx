@@ -42,30 +42,10 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
   // Download Sample Excel Template
   const handleDownloadTemplate = () => {
     const templateData = [
-      {
-        NISN: '0071234567',
-        'Nama Lengkap': 'Muhammad Rizky Pratama',
-        Kelas: 'XI TKR 1',
-        Email: '0071234567@siswa.mitra.sch.id'
-      },
-      {
-        NISN: '0071234568',
-        'Nama Lengkap': 'Ahmad Fauzi Setiawan',
-        Kelas: 'XI TKR 1',
-        Email: '0071234568@siswa.mitra.sch.id'
-      },
-      {
-        NISN: '0071234569',
-        'Nama Lengkap': 'Bagas Aditya Nugraha',
-        Kelas: 'XI TKR 1',
-        Email: '0071234569@siswa.mitra.sch.id'
-      },
-      {
-        NISN: '0071234570',
-        'Nama Lengkap': 'Dwi Putra Prasetyo',
-        Kelas: 'X TKR 1',
-        Email: '0071234570@siswa.mitra.sch.id'
-      }
+      { NISN: '0071234567', 'Nama Lengkap': 'Muhammad Rizky Pratama', Kelas: 'XI TKR 1' },
+      { NISN: '0071234568', 'Nama Lengkap': 'Ahmad Fauzi Setiawan',   Kelas: 'XI TKR 1' },
+      { NISN: '0071234569', 'Nama Lengkap': 'Bagas Aditya Nugraha',   Kelas: 'XI TKR 1' },
+      { NISN: '0071234570', 'Nama Lengkap': 'Dwi Putra Prasetyo',     Kelas: 'X TKR 1'  }
     ];
 
     const worksheet = XLSX.utils.json_to_sheet(templateData);
@@ -73,7 +53,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Data Siswa');
 
     // Auto width
-    worksheet['!cols'] = [{ wch: 15 }, { wch: 30 }, { wch: 15 }, { wch: 35 }];
+    worksheet['!cols'] = [{ wch: 15 }, { wch: 32 }, { wch: 14 }];
 
     XLSX.writeFile(workbook, 'Template_Import_Siswa_NISN.xlsx');
     toast.success('Template Diunduh', 'File Template_Import_Siswa_NISN.xlsx siap diisi.');
@@ -234,7 +214,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
                   1. Format File Excel
                 </span>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Gunakan format template standar dengan kolom: <strong>NISN</strong>, <strong>Nama Lengkap</strong>, dan <strong>Kelas</strong>.
+                  Cukup 3 kolom: <strong>NISN</strong>, <strong>Nama Lengkap</strong>, dan <strong>Kelas</strong>. Password siswa otomatis diset sama dengan NISN.
                 </p>
               </div>
               <button
@@ -316,7 +296,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
                   <table className="w-full text-left text-xs whitespace-nowrap">
                     <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0">
                       <tr>
-                        <th className="px-4 py-2.5">NISN (Username/PW)</th>
+                        <th className="px-4 py-2.5">NISN (Username & PW)</th>
                         <th className="px-4 py-2.5">Nama Lengkap</th>
                         <th className="px-4 py-2.5">Kelas</th>
                         <th className="px-4 py-2.5">Status</th>
