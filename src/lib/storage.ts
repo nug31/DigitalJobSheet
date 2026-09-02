@@ -285,204 +285,15 @@ const DEFAULT_JOBSHEETS: Jobsheet[] = [
   }
 ];
 
-const DEFAULT_SUBMISSIONS: Submission[] = [
-  {
-    id: 'sub-001',
-    jobsheet_id: 'job-002',
-    jobsheet_code: 'JOB-002',
-    jobsheet_title: 'Pengukuran Presisi dengan Jangka Sorong & Micrometer',
-    student_id: 'demo-student-001',
-    student_name: 'Muhammad Rizky Pratama',
-    student_nis: '2024001',
-    class_name: 'XI TKR 1',
-    start_time: '2025-02-10T08:30:00.000Z',
-    finish_time: '2025-02-10T09:25:00.000Z',
-    duration_seconds: 3300,
-    safety_checks: {
-      '0': true,
-      '1': true,
-      '2': true
-    },
-    material_checks: {
-      'm-201': true,
-      'm-202': true,
-      'm-203': true,
-      'm-204': true
-    },
-    step_data: {
-      'step-201': { completed: true, notes: 'Kalibrasi nol telah dicek akurat.' },
-      'step-202': { completed: true, notes: 'Pengukuran mikrometer 3 kali pengulangan.' },
-      'step-203': { completed: true, notes: 'Selesai.' }
-    },
-    measurements_data: {
-      'meas-201': '19.985',
-      'meas-202': '19.988',
-      'meas-203': '20.015'
-    },
-    student_notes: 'Praktik berjalan lancar, hasil ukur presisi dan masuk dalam toleransi buku manual.',
-    status: 'graded',
-    submitted_at: '2025-02-10T09:26:00.000Z',
-    score_k3: 95,
-    score_steps: 90,
-    score_measurements: 95,
-    total_score: 93,
-    competency_status: 'Kompeten',
-    teacher_feedback: 'Luar biasa! Pembacaan micrometer sangat teliti dan pemahaman SOP sangat baik.',
-    graded_at: '2025-02-10T11:00:00.000Z',
-    graded_by: 'Bpk. Andi Santoso, S.Pd'
-  },
-  {
-    id: 'sub-002',
-    jobsheet_id: 'job-001',
-    jobsheet_code: 'JOB-001',
-    jobsheet_title: 'Pemeriksaan & Penggantian Kampas Rem Cakram',
-    student_id: 'demo-student-001',
-    student_name: 'Muhammad Rizky Pratama',
-    student_nis: '2024001',
-    class_name: 'XI TKR 1',
-    start_time: '2025-02-15T10:00:00.000Z',
-    finish_time: '2025-02-15T11:18:00.000Z',
-    duration_seconds: 4680,
-    safety_checks: {
-      '0': true,
-      '1': true,
-      '2': true,
-      '3': true
-    },
-    material_checks: {
-      'm-1': true,
-      'm-2': true,
-      'm-3': true,
-      'm-4': true,
-      'm-5': true,
-      'm-6': true,
-      'm-7': true,
-      'm-8': true
-    },
-    step_data: {
-      'step-1': { completed: true },
-      'step-2': { completed: true },
-      'step-3': { completed: true },
-      'step-4': { completed: true },
-      'step-5': { completed: true }
-    },
-    measurements_data: {
-      'meas-1': '5.2',
-      'meas-2': '5.0',
-      'meas-3': '21.4',
-      'meas-4': 'Sangat Baik (Kering & Lentur)'
-    },
-    student_notes: 'Kampas rem masih tebal (5.0mm) di atas batas limit 2.0mm. Rotor masih 21.4mm. Hanya dilakukan pembersihan dan pelumasan pin.',
-    status: 'submitted',
-    submitted_at: '2025-02-15T11:19:00.000Z'
-  },
-  {
-    id: 'sub-003',
-    jobsheet_id: 'job-003',
-    jobsheet_code: 'JOB-003',
-    jobsheet_title: 'Perakitan & Troubleshooting Rangkaian Lampu Kepala',
-    student_id: 'student-002',
-    student_name: 'Ahmad Fauzi Setiawan',
-    student_nis: '2024002',
-    class_name: 'XI TKR 1',
-    start_time: '2025-02-18T08:00:00.000Z',
-    finish_time: '2025-02-18T09:20:00.000Z',
-    duration_seconds: 4800,
-    safety_checks: { '0': true, '1': true, '2': true },
-    material_checks: { 'm-301': true, 'm-302': true, 'm-303': true, 'm-304': true, 'm-305': true },
-    step_data: {
-      'step-301': { completed: true },
-      'step-302': { completed: true },
-      'step-303': { completed: true }
-    },
-    measurements_data: {
-      'meas-301': '12.6',
-      'meas-302': '12.1',
-      'meas-303': 'Sempurna (Kedua Lampu Terang Normal)'
-    },
-    student_notes: 'Rangkaian relay lampu dekat dan jauh bekerja normal. Drop tegangan hanya 0.5V.',
-    status: 'graded',
-    submitted_at: '2025-02-18T09:21:00.000Z',
-    score_k3: 90,
-    score_steps: 95,
-    score_measurements: 95,
-    total_score: 94,
-    competency_status: 'Kompeten',
-    teacher_feedback: 'Pemasangan rapi dan pemahaman terminal relay 30, 87, 85, 86 sangat baik.',
-    graded_at: '2025-02-18T10:30:00.000Z',
-    graded_by: 'Bpk. Andi Santoso, S.Pd'
-  }
-];
+const DEFAULT_SUBMISSIONS: Submission[] = [];
 
-const DEFAULT_USERS: UserProfile[] = [
-  {
-    id: 'demo-admin-001',
-    role: 'admin',
-    full_name: 'LNorris',
-    nis_nip: '19800101001',
-    email: 'admin@mitra.sch.id',
-    avatar_url: null
-  },
-  {
-    id: 'demo-teacher-001',
-    role: 'teacher',
-    full_name: 'Joko Setyo Nugroho, S.T',
-    nis_nip: '19850315002',
-    email: 'guru@mitra.sch.id',
-    avatar_url: null
-  },
-  {
-    id: 'student-ahnaf-001',
-    role: 'student',
-    full_name: 'AHNAF ABDUL JABBAR',
-    nis_nip: '0106090576',
-    class_name: 'X TKR 2',
-    email: '0106090576@siswa.mitra.sch.id',
-    avatar_url: null
-  },
-  {
-    id: 'demo-student-001',
-    role: 'student',
-    full_name: 'Muhammad Rizky Pratama',
-    nis_nip: '0071234567',
-    class_name: 'XI TKR 1',
-    email: '0071234567@siswa.mitra.sch.id',
-    avatar_url: null
-  },
-  {
-    id: 'student-002',
-    role: 'student',
-    full_name: 'Ahmad Fauzi Setiawan',
-    nis_nip: '0071234568',
-    class_name: 'XI TKR 1',
-    email: '0071234568@siswa.mitra.sch.id',
-    avatar_url: null
-  },
-  {
-    id: 'student-003',
-    role: 'student',
-    full_name: 'Bagas Aditya Nugraha',
-    nis_nip: '0071234569',
-    class_name: 'XI TKR 1',
-    email: '0071234569@siswa.mitra.sch.id',
-    avatar_url: null
-  },
-  {
-    id: 'student-004',
-    role: 'student',
-    full_name: 'Dwi Putra Prasetyo',
-    nis_nip: '0071234570',
-    class_name: 'X TKR 1',
-    email: '0071234570@siswa.mitra.sch.id',
-    avatar_url: null
-  }
-];
+const DEFAULT_USERS: UserProfile[] = [];
 
 const DEFAULT_CLASSES: ClassItem[] = [
   {
     id: 'cls-1',
     name: 'X TKR 1',
-    department: 'Teknik Kendaraan Ringan Otomotif',
+    department: 'Teknik Otomotif',
     academic_year: '2024/2025',
     homeroom_teacher: 'Bpk. Bambang Sutrisno, S.T',
     total_students: 36
@@ -490,34 +301,18 @@ const DEFAULT_CLASSES: ClassItem[] = [
   {
     id: 'cls-1b',
     name: 'X TKR 2',
-    department: 'Teknik Kendaraan Ringan Otomotif',
+    department: 'Teknik Otomotif',
     academic_year: '2024/2025',
-    homeroom_teacher: 'Bpk. Andi Santoso, S.Pd',
+    homeroom_teacher: 'Joko Setyo Nugroho, S.T',
     total_students: 36
   },
   {
     id: 'cls-2',
     name: 'XI TKR 1',
-    department: 'Teknik Kendaraan Ringan Otomotif',
+    department: 'Teknik Otomotif',
     academic_year: '2024/2025',
-    homeroom_teacher: 'Bpk. Andi Santoso, S.Pd',
+    homeroom_teacher: 'Joko Setyo Nugroho, S.T',
     total_students: 36
-  },
-  {
-    id: 'cls-3',
-    name: 'XI TKR 2',
-    department: 'Teknik Kendaraan Ringan Otomotif',
-    academic_year: '2024/2025',
-    homeroom_teacher: 'Ibu Ratna Dewi, S.Pd',
-    total_students: 34
-  },
-  {
-    id: 'cls-4',
-    name: 'XII TKR 1',
-    department: 'Teknik Kendaraan Ringan Otomotif',
-    academic_year: '2024/2025',
-    homeroom_teacher: 'Bpk. Joko Purnomo, M.T',
-    total_students: 32
   }
 ];
 
@@ -542,22 +337,15 @@ const DEFAULT_SUBJECTS: SubjectItem[] = [
     name: 'Pemeliharaan Kelistrikan Kendaraan Ringan (PKKR)',
     description: 'Rangkaian sistem penerangan, relay, wiper, dan motor starter.',
     grade_level: 'Kelas XI'
-  },
-  {
-    id: 'subj-4',
-    code: 'PMKR',
-    name: 'Pemeliharaan Mesin Kendaraan Ringan (PMKR)',
-    description: 'Tune up, mekanisme katup, sistem pelumasan, dan pendinginan mesin.',
-    grade_level: 'Kelas XI & XII'
   }
 ];
 
 const STORAGE_KEYS = {
-  JOBSHEETS: 'mitra_jobsheets_v5',
-  SUBMISSIONS: 'mitra_submissions_v5',
-  USERS: 'mitra_users_v5',
-  CLASSES: 'mitra_classes_v5',
-  SUBJECTS: 'mitra_subjects_v5'
+  JOBSHEETS: 'mitra_jobsheets_v6',
+  SUBMISSIONS: 'mitra_submissions_v6',
+  USERS: 'mitra_users_v6',
+  CLASSES: 'mitra_classes_v6',
+  SUBJECTS: 'mitra_subjects_v6'
 };
 
 // Listeners for reactive updates
