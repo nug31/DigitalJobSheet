@@ -23,7 +23,11 @@ import {
   CheckCircle2,
   Image as ImageIcon,
   Maximize2,
-  X
+  X,
+  AlertTriangle,
+  Lock,
+  ShieldAlert,
+  Smartphone
 } from 'lucide-react';
 import { ConfirmModal } from '../components/ConfirmModal';
 
@@ -100,8 +104,78 @@ export const StudentJobsheetDetail: React.FC = () => {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const timerRef = useRef<number | null>(null);
 
-  // Modals
+  // Modals & Focus Lock States
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
+  const [violations, setViolations] = useState<number>(0);
+  const [showViolationModal, setShowViolationModal] = useState<boolean>(false);
+  const [showPinGuideModal, setShowPinGuideModal] = useState<boolean>(false);
+  const [isFocusLockActive] = useState<boolean>(true);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+
+  // App Switch & Tab Change Detector
+  useEffect(() => {
+    const isReadOnly = existingSubmission?.status === 'submitted' || existingSubmission?.status === 'graded';
+    if (isReadOnly || !isFocusLockActive) return;
+
+    let hasTriggeredInThisLeave = false;
+
+    const handleVisibilityChange = () => {
+      if (document.hidden || document.visibilityState === 'hidden') {
+        if (!hasTriggeredInThisLeave) {
+          hasTriggeredInThisLeave = true;
+          setViolations((prev) => {
+            const next = prev + 1;
+            setShowViolationModal(true);
+            return next;
+          });
+        }
+      } else {
+        hasTriggeredInThisLeave = false;
+      }
+    };
+
+    const handleBlur = () => {
+      if (!document.hidden && !hasTriggeredInThisLeave) {
+        hasTriggeredInThisLeave = true;
+        setViolations((prev) => {
+          const next = prev + 1;
+          setShowViolationModal(true);
+          return next;
+        });
+      }
+    };
+
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = 'Pekerjaan praktik Anda sedang berlangsung. Yakin ingin keluar?';
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('blur', handleBlur);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('blur', handleBlur);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isFocusLockActive, existingSubmission?.status]);
+
+  const toggleFullscreenMode = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().then(() => {
+        setIsFullscreen(true);
+        toast.success('Mode Layar Penuh Aktif', 'Layar terkunci penuh untuk fokus praktik.');
+      }).catch(() => {
+        toast.error('Info Fullscreen', 'Ketuk layar atau gunakan menu browser untuk mengaktifkan Fullscreen.');
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+        setIsFullscreen(false);
+      }
+    }
+  };
 
   // Initialize state from existing submission if any
   useEffect(() => {
@@ -201,6 +275,10 @@ export const StudentJobsheetDetail: React.FC = () => {
     if (!profile || !jobsheet) return;
     setTimerRunning(false);
     const submissionId = existingSubmission ? existingSubmission.id : `sub-${Date.now()}`;
+    const finalNotes = violations > 0
+      ? `${studentNotes ? studentNotes + ' | ' : ''}[Sistem Pengawasan: Terdeteksi ${violations}x berpindah aplikasi/tab]`
+      : studentNotes;
+
     const newSubmission: Submission = {
       id: submissionId,
       jobsheet_id: jobsheet.id,
@@ -217,7 +295,7 @@ export const StudentJobsheetDetail: React.FC = () => {
       material_checks: materialChecks,
       step_data: stepData,
       measurements_data: measurementsData,
-      student_notes: studentNotes,
+      student_notes: finalNotes,
       status: 'submitted',
       submitted_at: new Date().toISOString()
     };
@@ -260,7 +338,52 @@ export const StudentJobsheetDetail: React.FC = () => {
   const progressPercent = jobsheet.steps.length > 0 ? Math.round((completedStepsCount / jobsheet.steps.length) * 100) : 0;
 
   return (
-    <div className="space-y-4 sm:space-y-6 max-w-4xl mx-auto pb-28">
+    <div
+      className="space-y-4 sm:space-y-6 max-w-4xl mx-auto pb-28 select-none"
+      onContextMenu={(e) => isFocusLockActive && e.preventDefault()}
+    >
+      {/* Strict Focus Lock & Anti-Switch Bar */}
+      <div className="bg-slate-900 text-white p-3.5 sm:p-4 rounded-2xl shadow-lg border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="p-2 bg-blue-600/30 text-blue-400 rounded-xl border border-blue-500/30 shrink-0">
+            <ShieldAlert className="w-5 h-5 animate-pulse" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-black text-cyan-400 uppercase tracking-wider">Mode Pengawasan Praktik: AKTIF</span>
+              {violations > 0 && (
+                <span className="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[10px] font-bold flex items-center gap-1 animate-bounce">
+                  <AlertTriangle className="w-3 h-3 text-rose-400" /> {violations}x Berpindah App
+                </span>
+              )}
+            </div>
+            <p className="text-[11px] text-slate-400 font-medium mt-0.5">
+              Dilarang memindah tab/membuka aplikasi lain selama pekerjaan jobsheet berlangsung.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 w-full sm:w-auto shrink-0 justify-end">
+          <button
+            type="button"
+            onClick={toggleFullscreenMode}
+            className="flex-1 sm:flex-initial px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 border border-slate-700 transition-colors cursor-pointer"
+          >
+            <Lock className="w-3.5 h-3.5 text-blue-400" />
+            <span>{isFullscreen ? 'Keluar Fullscreen' : 'Layar Penuh'}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setShowPinGuideModal(true)}
+            className="flex-1 sm:flex-initial px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md transition-colors cursor-pointer"
+          >
+            <Smartphone className="w-3.5 h-3.5" />
+            <span>Kunci App di HP</span>
+          </button>
+        </div>
+      </div>
+
       {/* Header Info Card */}
       <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-4">
         <div className="flex items-start justify-between gap-3">
@@ -856,6 +979,110 @@ export const StudentJobsheetDetail: React.FC = () => {
                 </p>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Violation Warning Modal */}
+      {showViolationModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-in fade-in">
+          <div className="bg-slate-900 border border-rose-500/40 rounded-3xl max-w-md w-full p-6 text-white text-center shadow-2xl animate-in zoom-in-95 space-y-4">
+            <div className="w-16 h-16 bg-rose-500/20 text-rose-400 rounded-2xl border border-rose-500/30 flex items-center justify-center mx-auto">
+              <ShieldAlert className="w-9 h-9 animate-pulse" />
+            </div>
+
+            <div>
+              <span className="px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 font-black text-xs uppercase tracking-wider border border-rose-500/30 inline-block mb-2">
+                Peringatan Pengawasan Praktik #{violations}
+              </span>
+              <h3 className="text-xl font-black text-white">Terdeteksi Berpindah Aplikasi / Tab!</h3>
+              <p className="text-xs text-slate-300 mt-2 leading-relaxed">
+                Anda terdeteksi meninggalkan halaman jobsheet ini. Selama pengerjaan praktik, Anda <strong>dilarang membuka aplikasi lain, browser tab lain, atau beralih layar</strong>.
+              </p>
+            </div>
+
+            <div className="p-3.5 bg-slate-850 rounded-2xl border border-slate-800 text-xs text-slate-400 font-medium">
+              Catatan pelanggaran ini akan otomatis dikirim dan dicatat pada laporan guru pengampu.
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowViolationModal(false)}
+              className="w-full py-3 bg-rose-600 hover:bg-rose-700 text-white font-black rounded-xl text-xs shadow-lg shadow-rose-600/30 transition-all cursor-pointer active:scale-95"
+            >
+              Saya Mengerti & Kembali Berfokus
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* App Pinning / Kiosk Mode Tutorial Modal */}
+      {showPinGuideModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-in fade-in">
+          <div className="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl animate-in zoom-in-95">
+            {/* Header */}
+            <div className="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 bg-blue-600 rounded-xl">
+                  <Smartphone className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm sm:text-base">Kunci Aplikasi di Layar HP (App Pinning)</h3>
+                  <p className="text-[11px] text-slate-400">Cegah tertekan tombol Home / aplikasi lain secara tidak sengaja</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowPinGuideModal(false)}
+                className="p-1 text-slate-400 hover:text-white rounded-lg"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Body Instructions */}
+            <div className="p-6 overflow-y-auto space-y-5 text-xs text-slate-700">
+              {/* Android Guide */}
+              <div className="p-4 bg-blue-50/70 border border-blue-200 rounded-2xl space-y-2">
+                <h4 className="font-black text-blue-900 text-sm flex items-center gap-2">
+                  <span className="w-6 h-6 bg-blue-600 text-white rounded-lg flex items-center justify-center text-xs">1</span>
+                  Android (Fitur Sematkan Aplikasi)
+                </h4>
+                <ol className="list-decimal list-inside space-y-1.5 text-blue-950 font-medium pl-1 leading-relaxed">
+                  <li>Buka tampilan <strong>Recent Apps</strong> (usap layar ke atas atau tekan tombol garis 3).</li>
+                  <li>Ketuk logo/ikon aplikasi browser (Chrome / Edge) di bagian atas kartu aplikasi.</li>
+                  <li>Pilih menu <strong>"Sematkan Aplikasi" (Pin this app)</strong>.</li>
+                  <li>HP akan terkunci penuh pada halaman jobsheet ini dan tidak bisa keluar ke aplikasi lain sampai tombol dilepas!</li>
+                </ol>
+              </div>
+
+              {/* iPhone Guide */}
+              <div className="p-4 bg-slate-100 border border-slate-200 rounded-2xl space-y-2">
+                <h4 className="font-black text-slate-900 text-sm flex items-center gap-2">
+                  <span className="w-6 h-6 bg-slate-800 text-white rounded-lg flex items-center justify-center text-xs">2</span>
+                  iPhone / iOS (Akses Terpandu / Guided Access)
+                </h4>
+                <ol className="list-decimal list-inside space-y-1.5 text-slate-800 font-medium pl-1 leading-relaxed">
+                  <li>Buka <strong>Pengaturan &rarr; Aksesibilitas &rarr; Akses Terpandu (Guided Access)</strong> lalu aktifkan.</li>
+                  <li>Saat membuka halaman jobsheet ini, <strong>tekan tombol samping HP 3 kali</strong>.</li>
+                  <li>Ketuk <strong>Mulai (Start)</strong> di sudut kanan atas untuk mengunci HP.</li>
+                </ol>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowPinGuideModal(false);
+                  toggleFullscreenMode();
+                }}
+                className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs shadow-md"
+              >
+                Aktifkan Layar Penuh Sekarang
+              </button>
+            </div>
           </div>
         </div>
       )}
