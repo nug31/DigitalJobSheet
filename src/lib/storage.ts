@@ -7,7 +7,7 @@ const DEFAULT_JOBSHEETS: Jobsheet[] = [
     code: 'JOB-001',
     title: 'Pemeriksaan & Penggantian Kampas Rem Cakram',
     subject: 'Pemeliharaan Sasis dan Pemindah Tenaga Kendaraan Ringan',
-    target_class: 'XI TKR 1',
+    target_class: 'Kelas XI',
     description: 'Melakukan pemeriksaan ketebalan kampas rem, kondisi permukaan piringan rotor, dan pengecekan kebocoran minyak rem sesuai SOP Bengkel Resmi.',
     learning_objectives: [
       'Siswa dapat mengidentifikasi komponen utama sistem rem cakram hidrolis',
@@ -120,7 +120,7 @@ const DEFAULT_JOBSHEETS: Jobsheet[] = [
     code: 'JOB-002',
     title: 'Pengukuran Presisi dengan Jangka Sorong & Micrometer',
     subject: 'Pekerjaan Dasar Teknik Otomotif (PDTO)',
-    target_class: 'X TKR 1',
+    target_class: 'Kelas X',
     description: 'Praktik penggunaan alat ukur presisi vernier caliper ketelitian 0.05mm dan micrometer luar ketelitian 0.01mm pada komponen poros engkol dan katup mesin.',
     learning_objectives: [
       'Siswa mampu melakukan kalibrasi titik nol (zero point) pada micrometer dan vernier caliper',
@@ -204,7 +204,7 @@ const DEFAULT_JOBSHEETS: Jobsheet[] = [
     code: 'JOB-003',
     title: 'Perakitan & Troubleshooting Rangkaian Lampu Kepala',
     subject: 'Pemeliharaan Kelistrikan Kendaraan Ringan (PKKR)',
-    target_class: 'XI TKR 1',
+    target_class: 'Kelas XI',
     description: 'Praktik merangkai wiring diagram lampu kepala pengendali negatif/positif dengan relay 4-kaki, fuse, dan switch kombinasi.',
     learning_objectives: [
       'Siswa dapat membaca gambar skema wiring kelistrikan bodi otomotif',

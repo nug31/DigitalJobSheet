@@ -32,7 +32,7 @@ export const TeacherJobsheetCreate: React.FC = () => {
   const [code, setCode] = useState(existingJob?.code || `JOB-${Math.floor(100 + Math.random() * 900)}`);
   const [title, setTitle] = useState(existingJob?.title || '');
   const [subject, setSubject] = useState(existingJob?.subject || 'Pemeliharaan Sasis dan Pemindah Tenaga Kendaraan Ringan');
-  const [targetClass, setTargetClass] = useState(existingJob?.target_class || 'XI TKR 1');
+  const [targetClass, setTargetClass] = useState(existingJob?.target_class || 'Kelas X');
   const [duration, setDuration] = useState(existingJob?.duration || 90);
   const [difficulty, setDifficulty] = useState<'Dasar' | 'Menengah' | 'Mahir'>(existingJob?.difficulty || 'Menengah');
   const [description, setDescription] = useState(existingJob?.description || '');
@@ -378,10 +378,9 @@ export const TeacherJobsheetCreate: React.FC = () => {
                   onChange={(e) => setTargetClass(e.target.value)}
                   className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="X TKR 1">X TKR 1</option>
-                  <option value="XI TKR 1">XI TKR 1</option>
-                  <option value="XI TKR 2">XI TKR 2</option>
-                  <option value="XII TKR 1">XII TKR 1</option>
+                  <option value="Kelas X">Kelas X</option>
+                  <option value="Kelas XI">Kelas XI</option>
+                  <option value="Kelas XII">Kelas XII</option>
                 </select>
               </div>
 
