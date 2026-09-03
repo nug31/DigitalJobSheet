@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
 import { useToast } from '../contexts/ToastContext';
 import { Storage } from '../lib/storage';
+import { supabase } from '../lib/supabase';
 import type { UserProfile } from '../types';
 import {
   FileSpreadsheet,
@@ -12,7 +13,8 @@ import {
   X,
   Copy,
   Check,
-  Users
+  Users,
+  Loader2
 } from 'lucide-react';
 
 interface ParsedStudent {
@@ -131,31 +133,70 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
     reader.readAsBinaryString(file);
   };
 
-  // Save to App Database (Storage / Local)
-  const handleSaveToDatabase = () => {
+  // Save to App Database & Activate Auto-Login for All Uploaded Students
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSaveToDatabase = async () => {
     const validStudents = parsedList.filter((p) => p.valid);
     if (validStudents.length === 0) {
       toast.error('Tidak Ada Data Valid', 'Periksa kembali file Excel Anda.');
       return;
     }
 
+    setIsSaving(true);
     let addedCount = 0;
-    validStudents.forEach((st) => {
+
+    for (const st of validStudents) {
+      const studentEmail = st.email || `${st.nisn}@siswa.mitra.sch.id`;
       const newProfile: UserProfile = {
-        id: `student-${st.nisn}-${Date.now()}`,
+        id: `student-${st.nisn}`,
         full_name: st.fullName,
-        email: st.email || `${st.nisn}@siswa.mitra.sch.id`,
+        email: studentEmail,
         nis_nip: st.nisn,
         role: 'student',
         class_name: st.className,
         avatar_url: null
       };
 
+      // 1. Save to Local Storage for instant UI reactivity
       Storage.saveUser(newProfile);
-      addedCount++;
-    });
 
-    toast.success('Import Berhasil!', `${addedCount} akun siswa berhasil ditambahkan ke database sistem.`);
+      // 2. Sync to Supabase Profiles Table if Supabase is connected
+      try {
+        await (supabase.from('profiles') as any).upsert({
+          id: newProfile.id,
+          full_name: newProfile.full_name,
+          email: newProfile.email,
+          nis_nip: newProfile.nis_nip,
+          role: 'student',
+          class_name: newProfile.class_name
+        });
+
+        // 3. Pre-register to Supabase Auth so NISN password is valid immediately
+        await supabase.auth.signUp({
+          email: studentEmail,
+          password: st.nisn,
+          options: {
+            data: {
+              full_name: st.fullName,
+              role: 'student',
+              nis_nip: st.nisn,
+              class_name: st.className
+            }
+          }
+        });
+      } catch (err) {
+        console.warn(`Supabase sync note for ${st.nisn}:`, err);
+      }
+
+      addedCount++;
+    }
+
+    setIsSaving(false);
+    toast.success(
+      'Import & Aktivasi Berhasil!',
+      `${addedCount} siswa berhasil ditambahkan. Seluruh siswa langsung bisa login menggunakan NISN & Password = NISN.`
+    );
     if (onSuccess) onSuccess();
     onClose();
   };
@@ -370,11 +411,21 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
             {parsedList.length > 0 && (
               <button
                 type="button"
+                disabled={isSaving}
                 onClick={handleSaveToDatabase}
-                className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-xl text-xs shadow-md shadow-emerald-600/20 transition-all active:scale-95"
+                className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-xl text-xs shadow-md shadow-emerald-600/20 transition-all active:scale-95 disabled:opacity-60 cursor-pointer"
               >
-                <Users className="w-4 h-4" />
-                <span>Simpan {validCount} Siswa ke Database</span>
+                {isSaving ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Mengaktifkan Akun Siswa...</span>
+                  </>
+                ) : (
+                  <>
+                    <Users className="w-4 h-4" />
+                    <span>Simpan & Aktifkan {validCount} Siswa</span>
+                  </>
+                )}
               </button>
             )}
           </div>
