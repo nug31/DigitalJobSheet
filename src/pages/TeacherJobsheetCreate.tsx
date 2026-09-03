@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Storage } from '../lib/storage';
+import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import type { Jobsheet, MaterialItem, StepItem, MeasurementItem } from '../types';
@@ -163,7 +164,7 @@ export const TeacherJobsheetCreate: React.FC = () => {
   const removeMeasurement = (index: number) => setMeasurements(measurements.filter((_, i) => i !== index));
 
   // Save handler
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!title.trim()) {
       toast.error('Gagal Menyimpan', 'Judul jobsheet wajib diisi.');
       setActiveTab('info');
@@ -189,7 +190,33 @@ export const TeacherJobsheetCreate: React.FC = () => {
       created_by: existingJob?.created_by || profile?.full_name || 'Guru Pengampu'
     };
 
+    // 1. Save to localStorage for instant local reactivity
     Storage.saveJobsheet(savedJob);
+
+    // 2. Sync to Supabase so students on any device can see updated photos
+    try {
+      await (supabase.from('jobsheets') as any).upsert({
+        id: savedJob.id,
+        code: savedJob.code,
+        title: savedJob.title,
+        subject: savedJob.subject,
+        target_class: savedJob.target_class,
+        duration: savedJob.duration,
+        difficulty: savedJob.difficulty,
+        status: savedJob.status,
+        description: savedJob.description,
+        learning_objectives: savedJob.learning_objectives,
+        safety_points: savedJob.safety_points,
+        materials: savedJob.materials,
+        steps: savedJob.steps,
+        measurements: savedJob.measurements,
+        created_at: savedJob.created_at,
+        created_by: savedJob.created_by
+      }, { onConflict: 'id' });
+    } catch (err) {
+      console.warn('Supabase jobsheet sync note:', err);
+    }
+
     toast.success(
       isEditing ? 'Jobsheet Diperbarui' : 'Jobsheet Berhasil Dibuat!',
       `Jobsheet ${savedJob.code} siap dikerjakan siswa.`

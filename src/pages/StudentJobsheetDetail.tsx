@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import { Storage } from '../lib/storage';
+import { supabase } from '../lib/supabase';
 import type { Jobsheet, Submission, StepSubmissionData } from '../types';
 import {
   BookOpen,
@@ -32,8 +33,49 @@ export const StudentJobsheetDetail: React.FC = () => {
   const { profile } = useAuth();
   const toast = useToast();
 
-  const jobsheet: Jobsheet = Storage.getJobsheetById(id || '') || Storage.getJobsheets()[0];
-  const existingSubmission: Submission | undefined = profile ? Storage.getStudentSubmissionForJobsheet(profile.id, jobsheet.id) : undefined;
+  // Load jobsheet from Supabase (authoritative) then fallback to localStorage
+  const [jobsheet, setJobsheet] = useState<Jobsheet | null>(
+    () => Storage.getJobsheetById(id || '') || null
+  );
+  const [jobsheetLoading, setJobsheetLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchJobsheet = async () => {
+      setJobsheetLoading(true);
+      try {
+        const { data } = await (supabase.from('jobsheets') as any)
+          .select('*')
+          .eq('id', id)
+          .single();
+
+        if (data) {
+          setJobsheet(data as Jobsheet);
+          // Update local cache too
+          Storage.saveJobsheet(data as Jobsheet);
+        } else {
+          // Try by code
+          const { data: byCode } = await (supabase.from('jobsheets') as any)
+            .select('*')
+            .eq('code', id?.toUpperCase())
+            .single();
+          if (byCode) {
+            setJobsheet(byCode as Jobsheet);
+            Storage.saveJobsheet(byCode as Jobsheet);
+          }
+        }
+      } catch (err) {
+        console.warn('Supabase jobsheet fetch note:', err);
+      } finally {
+        setJobsheetLoading(false);
+      }
+    };
+
+    fetchJobsheet();
+  }, [id]);
+
+  const existingSubmission: Submission | undefined = profile && jobsheet
+    ? Storage.getStudentSubmissionForJobsheet(profile.id, jobsheet.id)
+    : undefined;
 
   const [activeTab, setActiveTab] = useState<'info' | 'k3' | 'steps'>('info');
 
@@ -131,7 +173,7 @@ export const StudentJobsheetDetail: React.FC = () => {
   };
 
   const handleSaveDraft = () => {
-    if (!profile) return;
+    if (!profile || !jobsheet) return;
     const submissionId = existingSubmission ? existingSubmission.id : `sub-${Date.now()}`;
     const newSubmission: Submission = {
       id: submissionId,
@@ -156,7 +198,7 @@ export const StudentJobsheetDetail: React.FC = () => {
   };
 
   const handleSubmit = () => {
-    if (!profile) return;
+    if (!profile || !jobsheet) return;
     setTimerRunning(false);
     const submissionId = existingSubmission ? existingSubmission.id : `sub-${Date.now()}`;
     const newSubmission: Submission = {
@@ -183,6 +225,35 @@ export const StudentJobsheetDetail: React.FC = () => {
     setIsSubmitModalOpen(false);
     toast.success('Pekerjaan Berhasil Dikumpulkan!', 'Tugas Anda telah diserahkan ke guru.');
   };
+
+  if (jobsheetLoading && !jobsheet) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-center">
+        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="font-bold text-slate-700 text-sm">Memuat Foto & Detail Jobsheet...</p>
+      </div>
+    );
+  }
+
+  if (!jobsheet) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-center">
+        <div className="p-4 bg-rose-50 text-rose-600 rounded-2xl mb-4">
+          <BookOpen className="w-8 h-8" />
+        </div>
+        <h2 className="text-xl font-bold text-slate-900 mb-2">Jobsheet Tidak Ditemukan</h2>
+        <p className="text-xs text-slate-500 max-w-sm mb-6">
+          Jobsheet ini mungkin telah dihapus atau kode QR tidak valid.
+        </p>
+        <button
+          onClick={() => navigate('/student/dashboard')}
+          className="px-5 py-2.5 bg-blue-600 text-white font-bold text-xs rounded-xl shadow-md"
+        >
+          Kembali ke Dashboard
+        </button>
+      </div>
+    );
+  }
 
   // Completed steps count
   const completedStepsCount = Object.values(stepData).filter((s) => s.completed).length;

@@ -2,19 +2,35 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { BookOpen, CheckCircle, Clock, AlertCircle, QrCode, Search, Sparkles, ArrowRight, Award } from 'lucide-react';
 import { Storage, subscribeStorage } from '../lib/storage';
+import { supabase } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
 import { QRScannerModal } from '../components/QRScannerModal';
+import type { Jobsheet } from '../types';
 
 export const StudentDashboard: React.FC = () => {
   const { profile } = useAuth();
   const navigate = useNavigate();
-  const [jobsheets, setJobsheets] = useState(Storage.getJobsheets());
+  const [jobsheets, setJobsheets] = useState<Jobsheet[]>(Storage.getJobsheets());
   const [submissions, setSubmissions] = useState(profile ? Storage.getStudentSubmissions(profile.id) : []);
   const [isQRScannerOpen, setIsQRScannerOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
 
   useEffect(() => {
+    const fetchSupabaseJobsheets = async () => {
+      try {
+        const { data } = await (supabase.from('jobsheets') as any).select('*');
+        if (data && data.length > 0) {
+          data.forEach((j: Jobsheet) => Storage.saveJobsheet(j));
+          setJobsheets(Storage.getJobsheets());
+        }
+      } catch (err) {
+        console.warn('Supabase jobsheets sync note:', err);
+      }
+    };
+
+    fetchSupabaseJobsheets();
+
     const update = () => {
       setJobsheets(Storage.getJobsheets());
       if (profile) {
