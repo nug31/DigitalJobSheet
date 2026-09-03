@@ -38,27 +38,63 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
   const [fileName, setFileName] = useState<string>('');
   const [copiedSQL, setCopiedSQL] = useState(false);
   const [activeView, setActiveView] = useState<'preview' | 'sql'>('preview');
+  const [isSaving, setIsSaving] = useState(false);
 
   if (!isOpen) return null;
 
-  // Download Sample Excel Template
+  // Download Sample Excel Template (.xlsx)
   const handleDownloadTemplate = () => {
-    const templateData = [
-      { NISN: '0071234567', 'Nama Lengkap': 'Muhammad Rizky Pratama', Kelas: 'XI TKR 1' },
-      { NISN: '0071234568', 'Nama Lengkap': 'Ahmad Fauzi Setiawan',   Kelas: 'XI TKR 1' },
-      { NISN: '0071234569', 'Nama Lengkap': 'Bagas Aditya Nugraha',   Kelas: 'XI TKR 1' },
-      { NISN: '0071234570', 'Nama Lengkap': 'Dwi Putra Prasetyo',     Kelas: 'X TKR 1'  }
-    ];
+    try {
+      const templateData = [
+        { NISN: '0106090576', 'Nama Lengkap': 'AHNAF ABDUL JABBAR', Kelas: 'X TKR 2' },
+        { NISN: '0117995998', 'Nama Lengkap': 'AKHDAN SAKHI AQILAH', Kelas: 'X TKR 2' },
+        { NISN: '0104000553', 'Nama Lengkap': 'ALFIAN RAMADHAN DWI PUTRA', Kelas: 'X TKR 2' },
+        { NISN: '0117613383', 'Nama Lengkap': 'AMSYARYASYRAF NAUFAL ZAHIDY', Kelas: 'X TKR 2' }
+      ];
 
-    const worksheet = XLSX.utils.json_to_sheet(templateData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Data Siswa');
+      const worksheet = XLSX.utils.json_to_sheet(templateData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Data Siswa');
+      worksheet['!cols'] = [{ wch: 16 }, { wch: 34 }, { wch: 14 }];
 
-    // Auto width
-    worksheet['!cols'] = [{ wch: 15 }, { wch: 32 }, { wch: 14 }];
+      XLSX.writeFile(workbook, 'Template_Import_Siswa.xlsx');
+      toast.success('Template Diunduh', 'File Template_Import_Siswa.xlsx siap diisi.');
+    } catch (e) {
+      console.error('Error generating xlsx template, fallback to CSV:', e);
+      // Native CSV Fallback
+      const csvContent = 'NISN,Nama Lengkap,Kelas\n0106090576,"AHNAF ABDUL JABBAR",X TKR 2\n0117995998,"AKHDAN SAKHI AQILAH",X TKR 2\n0104000553,"ALFIAN RAMADHAN DWI PUTRA",X TKR 2';
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'Template_Import_Siswa.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      toast.success('Template CSV Diunduh', 'File template siap dibuka di Excel.');
+    }
+  };
 
-    XLSX.writeFile(workbook, 'Template_Import_Siswa_NISN.xlsx');
-    toast.success('Template Diunduh', 'File Template_Import_Siswa_NISN.xlsx siap diisi.');
+  // Safe CSV Parser Fallback
+  const parseCSVText = (text: string): ParsedStudent[] => {
+    const lines = text.split(/\r?\n/).filter((l) => l.trim().length > 0);
+    if (lines.length <= 1) return [];
+
+    const dataLines = lines.slice(1);
+    return dataLines.map((line) => {
+      const parts = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map((p) => p.replace(/^"|"$/g, '').trim());
+      const nisn = parts[0] || '';
+      const fullName = parts[1] || '';
+      const className = parts[2] || 'X TKR 2';
+      const email = `${nisn}@siswa.mitra.sch.id`;
+
+      const valid = Boolean(nisn && fullName);
+      let errorMsg = '';
+      if (!nisn) errorMsg = 'NISN kosong';
+      else if (!fullName) errorMsg = 'Nama kosong';
+
+      return { nisn, fullName, className, email, valid, errorMsg };
+    });
   };
 
   // Handle File Upload & Parse
@@ -67,8 +103,32 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
     if (!file) return;
 
     setFileName(file.name);
-    const reader = new FileReader();
+    const isCSV = file.name.toLowerCase().endsWith('.csv');
 
+    if (isCSV) {
+      const textReader = new FileReader();
+      textReader.onload = (evt) => {
+        try {
+          const text = evt.target?.result as string;
+          const parsed = parseCSVText(text);
+          if (parsed.length === 0) {
+            toast.error('File Kosong', 'Tidak ada data siswa yang ditemukan.');
+            return;
+          }
+          setParsedList(parsed);
+          const validCount = parsed.filter((p) => p.valid).length;
+          toast.success('File Berhasil Dibaca', `Ditemukan ${validCount} siswa valid.`);
+        } catch (err) {
+          console.error('CSV parse error:', err);
+          toast.error('Gagal Membaca File', 'Periksa format file CSV Anda.');
+        }
+      };
+      textReader.readAsText(file);
+      return;
+    }
+
+    // Binary / XLSX Reading
+    const reader = new FileReader();
     reader.onload = (evt) => {
       try {
         const bstr = evt.target?.result;
@@ -77,13 +137,12 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
         const worksheet = workbook.Sheets[firstSheetName];
         const rawJson: any[] = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
 
-        if (rawJson.length === 0) {
+        if (!rawJson || rawJson.length === 0) {
           toast.error('File Kosong', 'Tidak ada baris data siswa yang ditemukan pada file Excel.');
           return;
         }
 
         const parsed: ParsedStudent[] = rawJson.map((row) => {
-          // Normalize column headers
           const nisn = String(
             row['NISN'] || row['nisn'] || row['NIS'] || row['nis'] || row['Nomor Induk'] || row['no_induk'] || ''
           ).trim();
@@ -93,7 +152,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
           ).trim();
 
           const className = String(
-            row['Kelas'] || row['kelas'] || row['Rombel'] || row['rombel'] || 'XI TKR 1'
+            row['Kelas'] || row['kelas'] || row['Rombel'] || row['rombel'] || 'X TKR 2'
           ).trim();
 
           const email = String(
@@ -134,8 +193,6 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
   };
 
   // Save to App Database & Activate Auto-Login for All Uploaded Students
-  const [isSaving, setIsSaving] = useState(false);
-
   const handleSaveToDatabase = async () => {
     const validStudents = parsedList.filter((p) => p.valid);
     if (validStudents.length === 0) {
@@ -227,8 +284,14 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
   const invalidCount = parsedList.filter((p) => !p.valid).length;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col overflow-hidden border border-slate-100">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col overflow-hidden border border-slate-100 animate-in zoom-in-95"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -240,13 +303,17 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
               <p className="text-xs text-slate-500">Username dan password siswa akan otomatis diset menggunakan NISN</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-200">
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-200 transition-colors"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Body */}
-        <div className="p-6 overflow-y-auto space-y-6">
+        <div className="p-6 overflow-y-auto space-y-6 flex-1">
           {/* Step 1: Download Template & Upload Area */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="p-4 bg-emerald-50/50 border border-emerald-200 rounded-2xl flex flex-col justify-between">
@@ -261,7 +328,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
               <button
                 type="button"
                 onClick={handleDownloadTemplate}
-                className="mt-4 flex items-center justify-center gap-2 bg-white hover:bg-emerald-100 text-emerald-800 font-bold px-4 py-2.5 rounded-xl border border-emerald-300 text-xs transition-colors shadow-xs active:scale-95"
+                className="mt-4 flex items-center justify-center gap-2 bg-white hover:bg-emerald-100 text-emerald-800 font-bold px-4 py-2.5 rounded-xl border border-emerald-300 text-xs transition-colors shadow-xs active:scale-95 cursor-pointer"
               >
                 <Download className="w-4 h-4 text-emerald-600" />
                 Download Template Excel (.xlsx)
@@ -314,7 +381,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
                   <button
                     type="button"
                     onClick={() => setActiveView('preview')}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                    className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                       activeView === 'preview' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600'
                     }`}
                   >
@@ -323,7 +390,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
                   <button
                     type="button"
                     onClick={() => setActiveView('sql')}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                    className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                       activeView === 'sql' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600'
                     }`}
                   >
@@ -372,7 +439,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
                     <button
                       type="button"
                       onClick={handleCopySQL}
-                      className="flex items-center gap-1.5 text-emerald-400 hover:text-emerald-300 font-bold"
+                      className="flex items-center gap-1.5 text-emerald-400 hover:text-emerald-300 font-bold cursor-pointer"
                     >
                       {copiedSQL ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                       <span>{copiedSQL ? 'Tersalin!' : 'Copy SQL'}</span>
@@ -403,7 +470,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 sm:flex-initial px-4 py-2.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl text-xs hover:bg-slate-100"
+              className="flex-1 sm:flex-initial px-4 py-2.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl text-xs hover:bg-slate-100 cursor-pointer"
             >
               Batal
             </button>
