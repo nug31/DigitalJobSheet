@@ -36,7 +36,15 @@ export const Login: React.FC = () => {
         return;
       }
 
-      // Successful login - immediate direct navigation
+      // Check if there's a saved redirect URL from QR scan (saved by ProtectedRoute)
+      const savedRedirect = sessionStorage.getItem('mitra_redirect_after_login');
+      if (savedRedirect) {
+        sessionStorage.removeItem('mitra_redirect_after_login');
+        navigate(savedRedirect, { replace: true });
+        return;
+      }
+
+      // Successful login - navigate to role-appropriate dashboard
       const activeRole = res.profile?.role || (identifier.includes('@') ? 'teacher' : 'student');
       if (activeRole === 'admin') {
         navigate('/admin/dashboard', { replace: true });
