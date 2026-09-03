@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { BookOpen, AlertCircle, Loader2 } from 'lucide-react';
@@ -12,23 +12,42 @@ export const Login: React.FC = () => {
   const { signIn, profile } = useAuth();
   const navigate = useNavigate();
 
-  // If already logged in, redirect to appropriate role dashboard
-  React.useEffect(() => {
+  // If already logged in, redirect immediately
+  useEffect(() => {
     if (profile) {
-      if (profile.role === 'admin') navigate('/admin/dashboard');
-      else if (profile.role === 'teacher') navigate('/teacher/dashboard');
-      else navigate('/student/dashboard');
+      if (profile.role === 'admin') navigate('/admin/dashboard', { replace: true });
+      else if (profile.role === 'teacher') navigate('/teacher/dashboard', { replace: true });
+      else navigate('/student/dashboard', { replace: true });
     }
   }, [profile, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
+
     setLoading(true);
     setError(null);
 
-    const { error: signInError } = await signIn(identifier, password);
-    if (signInError) {
-      setError(signInError);
+    try {
+      const res = await signIn(identifier, password);
+      if (res.error) {
+        setError(res.error);
+        setLoading(false);
+        return;
+      }
+
+      // Successful login - immediate direct navigation
+      const activeRole = res.profile?.role || (identifier.includes('@') ? 'teacher' : 'student');
+      if (activeRole === 'admin') {
+        navigate('/admin/dashboard', { replace: true });
+      } else if (activeRole === 'teacher') {
+        navigate('/teacher/dashboard', { replace: true });
+      } else {
+        navigate('/student/dashboard', { replace: true });
+      }
+    } catch (err: any) {
+      console.error('Login submit error:', err);
+      setError('Terjadi kendala saat login. Silakan coba kembali.');
       setLoading(false);
     }
   };
@@ -92,7 +111,7 @@ export const Login: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex justify-center items-center gap-2 py-3.5 px-4 rounded-xl text-sm font-black text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-lg shadow-blue-500/25 transition-all active:scale-[0.98] disabled:opacity-50 mt-4 cursor-pointer"
+              className="w-full flex justify-center items-center gap-2 py-3.5 px-4 rounded-xl text-sm font-black text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-lg shadow-blue-500/25 transition-all active:scale-[0.98] disabled:opacity-60 mt-4 cursor-pointer"
             >
               {loading ? (
                 <>
