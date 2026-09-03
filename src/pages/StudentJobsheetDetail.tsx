@@ -20,7 +20,9 @@ import {
   Send,
   Check,
   CheckCircle2,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Maximize2,
+  X
 } from 'lucide-react';
 import { ConfirmModal } from '../components/ConfirmModal';
 
@@ -42,8 +44,14 @@ export const StudentJobsheetDetail: React.FC = () => {
   const [measurementsData, setMeasurementsData] = useState<Record<string, string>>({});
   const [studentNotes, setStudentNotes] = useState<string>('');
 
-  // Image fallback tracking
+  // Image fallback tracking & Lightbox Full View
   const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
+  const [previewImage, setPreviewImage] = useState<{
+    url: string;
+    title: string;
+    stepNumber: number;
+    instruction?: string;
+  } | null>(null);
 
   // Stopwatch States
   const [timerRunning, setTimerRunning] = useState(false);
@@ -520,7 +528,18 @@ export const StudentJobsheetDetail: React.FC = () => {
                   <div className="p-4 sm:p-5 space-y-4">
                     {/* SOP Illustration / Diagram */}
                     {step.image_url && !isImgFailed ? (
-                      <div className="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 relative group">
+                      <div
+                        onClick={() =>
+                          setPreviewImage({
+                            url: step.image_url!,
+                            title: step.title,
+                            stepNumber: step.step_number,
+                            instruction: step.instruction
+                          })
+                        }
+                        className="rounded-xl overflow-hidden border border-slate-200 bg-slate-950 relative group cursor-zoom-in transition-all hover:border-blue-400 hover:shadow-md"
+                        title="Klik untuk melihat foto SOP ukuran penuh"
+                      >
                         <img
                           src={step.image_url}
                           alt={step.title}
@@ -528,9 +547,17 @@ export const StudentJobsheetDetail: React.FC = () => {
                           onError={() => setFailedImages((prev) => ({ ...prev, [step.id]: true }))}
                           className="w-full h-48 sm:h-56 object-cover group-hover:scale-105 transition-transform duration-500"
                         />
-                        <div className="absolute top-2.5 left-2.5 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-lg text-[10px] font-bold text-white flex items-center gap-1.5 shadow-sm">
+                        <div className="absolute top-2.5 left-2.5 bg-black/75 backdrop-blur-md px-2.5 py-1 rounded-lg text-[10px] font-bold text-white flex items-center gap-1.5 shadow-sm">
                           <ImageIcon className="w-3 h-3 text-blue-400" />
                           <span>Panduan SOP Visual</span>
+                        </div>
+
+                        {/* Click to Zoom In Overlay */}
+                        <div className="absolute inset-0 bg-slate-900/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                          <div className="px-3.5 py-1.5 bg-slate-950/80 backdrop-blur-md rounded-xl text-white text-xs font-bold flex items-center gap-2 shadow-lg border border-white/20 transform scale-95 group-hover:scale-100 transition-transform">
+                            <Maximize2 className="w-4 h-4 text-cyan-400" />
+                            <span>Lihat Foto Sepenuhnya</span>
+                          </div>
                         </div>
                       </div>
                     ) : (
@@ -709,6 +736,58 @@ export const StudentJobsheetDetail: React.FC = () => {
         onConfirm={handleSubmit}
         onCancel={() => setIsSubmitModalOpen(false)}
       />
+
+      {/* Lightbox / Full-Screen Image Preview Modal */}
+      {previewImage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/85 backdrop-blur-md animate-in fade-in duration-200"
+          onClick={() => setPreviewImage(null)}
+        >
+          <div
+            className="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="px-4 sm:px-6 py-3.5 bg-slate-800/90 border-b border-slate-700 flex items-center justify-between text-white">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <span className="w-6 h-6 bg-blue-600 rounded-lg flex items-center justify-center text-xs font-black shrink-0">
+                  {previewImage.stepNumber}
+                </span>
+                <h3 className="font-bold text-sm sm:text-base truncate">
+                  {previewImage.title}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setPreviewImage(null)}
+                className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-700 rounded-xl transition-colors shrink-0 ml-2"
+                title="Tutup (ESC)"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Image Body */}
+            <div className="p-3 sm:p-5 flex-1 overflow-auto flex flex-col items-center justify-center bg-slate-950/60 min-h-[250px]">
+              <img
+                src={previewImage.url}
+                alt={previewImage.title}
+                className="max-h-[60vh] sm:max-h-[68vh] w-auto max-w-full object-contain rounded-xl shadow-lg border border-slate-800"
+              />
+            </div>
+
+            {/* Modal Footer / Instruction */}
+            {previewImage.instruction && (
+              <div className="px-4 sm:px-6 py-3 bg-slate-800/90 border-t border-slate-700 text-xs sm:text-sm text-slate-300">
+                <p className="font-semibold leading-relaxed">
+                  <span className="text-cyan-400 font-bold mr-1.5">Instruksi SOP:</span>
+                  {previewImage.instruction}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
