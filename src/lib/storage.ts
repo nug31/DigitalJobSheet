@@ -57,7 +57,7 @@ const DEFAULT_JOBSHEETS: Jobsheet[] = [
         step_number: 1,
         title: 'Persiapan & Pengangkatan Kendaraan (Lifting)',
         instruction: 'Parkir kendaraan di lantai datar, pasang ganjal roda belakang. Kendurkan mur roda depan sedikit saat roda masih menapak. Dongkrak kendaraan pada front crossmember dan pasang jack stand di pinch weld samping.',
-        image_url: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&q=80&w=800',
+        image_url: '/jobsheets/job-001/step-1.svg',
         estimated_minutes: 15
       },
       {
@@ -65,7 +65,7 @@ const DEFAULT_JOBSHEETS: Jobsheet[] = [
         step_number: 2,
         title: 'Pelepasan Roda dan Kaliper Rem',
         instruction: 'Buka penuh mur roda dan lepaskan roda. Lepaskan baut pin kaliper bagian bawah (baut 14mm), angkat badan kaliper ke atas dan gantungkan dengan kawat agar selang fleksibel tidak tertarik.',
-        image_url: 'https://images.unsplash.com/photo-1600790142055-619df03207e6?auto=format&fit=crop&q=80&w=800',
+        image_url: '/jobsheets/job-001/step-2.svg',
         estimated_minutes: 15
       },
       {
@@ -73,7 +73,7 @@ const DEFAULT_JOBSHEETS: Jobsheet[] = [
         step_number: 3,
         title: 'Pengukuran Ketebalan Kampas (Brake Pad) & Rotor',
         instruction: 'Lepaskan pad rem dari bracket kaliper. Ukur ketebalan kampas rem (tanpa pelat backing) di 3 titik menggunakan vernier caliper. Ukur juga ketebalan piringan rotor menggunakan micrometer luar pada jarak 10mm dari bibir luar.',
-        image_url: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&q=80&w=800',
+        image_url: '/jobsheets/job-001/step-3.svg',
         estimated_minutes: 25
       },
       {
@@ -81,7 +81,7 @@ const DEFAULT_JOBSHEETS: Jobsheet[] = [
         step_number: 4,
         title: 'Pembersihan & Perakitan Kembali',
         instruction: 'Semprotkan brake cleaner pada bracket dan piringan. Pasang shim anti-squeak dan kampas rem baru/lama yang masih layak. Oleskan brake grease tipis pada sliding pin kaliper. Kencangkan baut kaliper sesuai torsi spesifikasi.',
-        image_url: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&q=80&w=800',
+        image_url: '/jobsheets/job-001/step-4.svg',
         estimated_minutes: 20
       },
       {
@@ -89,7 +89,7 @@ const DEFAULT_JOBSHEETS: Jobsheet[] = [
         step_number: 5,
         title: 'Pemasangan Roda & Tes Tekanan Pedal Rem',
         instruction: 'Pasang kembali roda dan kencangkan mur secara menyilang. Turunkan kendaraan dari jack stand. Kencangkan baut roda dengan kunci momen (105 Nm). Tekan pedal rem beberapa kali hingga terasa keras sebelum tes jalan.',
-        image_url: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&q=80&w=800',
+        image_url: '/jobsheets/job-001/step-5.svg',
         estimated_minutes: 15
       }
     ],
@@ -165,7 +165,7 @@ const DEFAULT_JOBSHEETS: Jobsheet[] = [
         step_number: 1,
         title: 'Pembersihan & Pengecekan Titik Nol (Zero Point)',
         instruction: 'Bersihkan anvil dan spindle micrometer dengan kertas bersih. Putar rachet stopper perlahan hingga berbunyi klik 2-3 kali. Pastikan garis 0 pada thimble sejajar dengan garis index sleeve.',
-        image_url: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&q=80&w=800',
+        image_url: '/jobsheets/job-002/step-1.svg',
         estimated_minutes: 10
       },
       {
@@ -173,7 +173,7 @@ const DEFAULT_JOBSHEETS: Jobsheet[] = [
         step_number: 2,
         title: 'Pengukuran Diameter Luar Pin Piston',
         instruction: 'Posisikan pin piston di antara anvil dan spindle. Putar thimble mendekati benda kerja, lalu gunakan ratchet stopper hingga berbunyi klik 2-3 kali. Kunci lock lever dan baca nilai pengukuran.',
-        image_url: 'https://images.unsplash.com/photo-1581092162384-8987c1d64718?auto=format&fit=crop&q=80&w=800',
+        image_url: '/jobsheets/job-002/step-2.svg',
         estimated_minutes: 25
       },
       {
@@ -181,7 +181,7 @@ const DEFAULT_JOBSHEETS: Jobsheet[] = [
         step_number: 3,
         title: 'Pengukuran Kedalaman & Diameter Dalam Bushing',
         instruction: 'Gunakan depth probe jangka sorong untuk mengukur kedalaman alur, dan gunakan rahang ukur dalam (inside jaws) untuk mengukur diameter lubang bushing.',
-        image_url: 'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&q=80&w=800',
+        image_url: '/jobsheets/job-002/step-3.svg',
         estimated_minutes: 25
       }
     ],
@@ -250,7 +250,7 @@ const DEFAULT_JOBSHEETS: Jobsheet[] = [
         step_number: 1,
         title: 'Pengecekan Tegangan Sumber Baterai',
         instruction: 'Ukur tegangan tanpa beban baterai menggunakan multimeter selector DCV 20V. Pastikan tegangan di atas 12.4 Volt.',
-        image_url: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&q=80&w=800',
+        image_url: '/jobsheets/job-003/step-1.svg',
         estimated_minutes: 15
       },
       {
@@ -258,7 +258,7 @@ const DEFAULT_JOBSHEETS: Jobsheet[] = [
         step_number: 2,
         title: 'Pemasangan Sirkuit Daya & Sirkuit Kontrol Relay',
         instruction: 'Hubungkan terminal 30 relay ke B+ melalui Fuse. Hubungkan terminal 87 ke filamen lampu kepala. Hubungkan terminal 85 ke saklar kombinasi dan 86 ke massa ground.',
-        image_url: 'https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&q=80&w=800',
+        image_url: '/jobsheets/job-003/step-2.svg',
         estimated_minutes: 45
       },
       {
@@ -266,7 +266,7 @@ const DEFAULT_JOBSHEETS: Jobsheet[] = [
         step_number: 3,
         title: 'Uji Fungsi Lampu Dekat, Jauh, dan Pass Beam',
         instruction: 'Nyalakan saklar posisi headlamp low beam, uji perpindahan ke high beam, dan operasikan saklar dim (flash). Amati terangnya cahaya kedua bohlam.',
-        image_url: 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&q=80&w=800',
+        image_url: '/jobsheets/job-003/step-3.svg',
         estimated_minutes: 30
       }
     ],
@@ -587,7 +587,8 @@ export const syncFromCloud = async (): Promise<void> => {
       const cloudJobs = jobRes.data as Jobsheet[];
       const cloudIds = new Set(cloudJobs.map((j) => j.id));
       // Keep local-only items (seed data, or a save whose upload failed) so no work is lost
-      const localOnly = Storage.getJobsheets().filter((j) => !cloudIds.has(j.id));
+      const cloudCodes = new Set(cloudJobs.map((j) => j.code));
+      const localOnly = Storage.getJobsheets().filter((j) => !cloudIds.has(j.id) && !cloudCodes.has(j.code));
       const merged = [...cloudJobs.sort((a, b) => (b.created_at || '').localeCompare(a.created_at || '')), ...localOnly];
       localStorage.setItem(STORAGE_KEYS.JOBSHEETS, JSON.stringify(merged));
       changed = true;

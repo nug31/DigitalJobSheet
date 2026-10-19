@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" font-family="Inter, Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/></marker>
+    <marker id="arrR" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/></marker>
+    <marker id="arrI" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1e293b"/></marker>
+  </defs>
+  <rect width="800" height="500" fill="#f8fafc"/>
+  <rect x="0" y="0" width="800" height="64" fill="#ffffff"/>
+  <line x1="0" y1="64" x2="800" y2="64" stroke="#e2e8f0" stroke-width="2"/>
+  <circle cx="40" cy="32" r="20" fill="#2563eb"/>
+  <text x="40" y="39" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">2</text>
+  <text x="72" y="40" font-size="21" font-weight="800" fill="#1e293b">Pemasangan Sirkuit Daya &amp; Kontrol Relay</text>
+  <text x="784" y="40" text-anchor="end" font-size="12" font-weight="700" fill="#64748b">JOB-003 · KELISTRIKAN BODI</text>
+  <rect x="50" y="160" width="90" height="70" rx="8" fill="#334155" stroke="#1e293b" stroke-width="3"/>
+  <text x="95" y="203" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">AKI</text>
+  <path d="M140,175 L200,175" stroke="#dc2626" stroke-width="4"/>
+  <rect x="200" y="163" width="60" height="24" rx="12" fill="#fde047" stroke="#1e293b" stroke-width="3"/>
+  <text x="230" y="180" text-anchor="middle" font-size="12" font-weight="800" fill="#1e293b">15A</text>
+  <path d="M260,175 L340,175 L340,200" stroke="#dc2626" stroke-width="4" fill="none"/>
+  <rect x="320" y="200" width="200" height="140" rx="10" fill="#fff" stroke="#1e293b" stroke-width="3"/>
+  <text x="470" y="290" text-anchor="middle" font-size="13" font-weight="800" fill="#64748b">RELAY</text>
+  <rect x="360" y="250" width="40" height="50" fill="none" stroke="#1e293b" stroke-width="3"/>
+  <line x1="362" y1="256" x2="398" y2="256" stroke="#1e293b" stroke-width="2"/><line x1="362" y1="265" x2="398" y2="265" stroke="#1e293b" stroke-width="2"/><line x1="362" y1="274" x2="398" y2="274" stroke="#1e293b" stroke-width="2"/><line x1="362" y1="283" x2="398" y2="283" stroke="#1e293b" stroke-width="2"/><line x1="362" y1="292" x2="398" y2="292" stroke="#1e293b" stroke-width="2"/>
+  <path d="M440,240 L490,230" stroke="#1e293b" stroke-width="4"/>
+  <circle cx="340" cy="220" r="7" fill="#fff" stroke="#1e293b" stroke-width="3"/><text x="340" y="246" text-anchor="middle" font-size="14" font-weight="800" fill="#1e293b">30</text><circle cx="500" cy="220" r="7" fill="#fff" stroke="#1e293b" stroke-width="3"/><text x="500" y="246" text-anchor="middle" font-size="14" font-weight="800" fill="#1e293b">87</text><circle cx="340" cy="320" r="7" fill="#fff" stroke="#1e293b" stroke-width="3"/><text x="340" y="308" text-anchor="middle" font-size="14" font-weight="800" fill="#1e293b">85</text><circle cx="420" cy="320" r="7" fill="#fff" stroke="#1e293b" stroke-width="3"/><text x="420" y="308" text-anchor="middle" font-size="14" font-weight="800" fill="#1e293b">86</text>
+  <path d="M500,220 L500,175 L620,175" stroke="#dc2626" stroke-width="4" fill="none"/>
+  <circle cx="650" cy="175" r="30" fill="#fef9c3" stroke="#1e293b" stroke-width="3"/>
+  <path d="M635,160 L665,190 M665,160 L635,190" stroke="#1e293b" stroke-width="2"/>
+  <path d="M680,175 L730,175 L730,390" stroke="#1e293b" stroke-width="4" fill="none"/>
+  <path d="M340,320 L340,380 L250,380" stroke="#2563eb" stroke-width="4" fill="none"/>
+  <path d="M250,380 L200,365" stroke="#2563eb" stroke-width="4"/>
+  <circle cx="250" cy="380" r="6" fill="#2563eb"/><circle cx="190" cy="380" r="6" fill="#2563eb"/>
+  <path d="M190,380 L120,380 L120,230" stroke="#2563eb" stroke-width="4" fill="none" stroke-dasharray="7 5"/>
+  <path d="M420,320 L420,390" stroke="#1e293b" stroke-width="4"/>
+  <line x1="400" y1="392" x2="440" y2="392" stroke="#1e293b" stroke-width="3"/><line x1="408" y1="400" x2="432" y2="400" stroke="#1e293b" stroke-width="3"/><line x1="414" y1="408" x2="426" y2="408" stroke="#1e293b" stroke-width="3"/>
+  <line x1="710" y1="392" x2="750" y2="392" stroke="#1e293b" stroke-width="3"/><line x1="718" y1="400" x2="742" y2="400" stroke="#1e293b" stroke-width="3"/><line x1="724" y1="408" x2="736" y2="408" stroke="#1e293b" stroke-width="3"/>
+  <text x="650" y="225" font-size="14" font-weight="700" fill="#1e293b" text-anchor="middle">Lampu kepala</text>
+  <text x="220" y="410" font-size="14" font-weight="700" fill="#2563eb" text-anchor="middle">Saklar kombinasi</text>
+  <text x="420" y="432" font-size="13" font-weight="700" fill="#1e293b" text-anchor="middle">Massa</text>
+  <text x="730" y="432" font-size="13" font-weight="700" fill="#1e293b" text-anchor="middle">Massa</text>
+  <text x="230" y="150" font-size="13" font-weight="700" fill="#dc2626" text-anchor="middle">Fuse dekat (+) aki</text>
+  <text x="560" y="120" font-size="14" font-weight="600" fill="#1e293b" text-anchor="middle">Merah = sirkuit daya · Biru = sirkuit kontrol</text>
+
+  <rect x="0" y="456" width="800" height="44" fill="#eff6ff"/>
+  <text x="400" y="484" text-anchor="middle" font-size="16" font-weight="600" fill="#2563eb">30 → B+ via fuse · 87 → lampu · 85 → saklar · 86 → massa</text>
+</svg>

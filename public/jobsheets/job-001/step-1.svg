@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" font-family="Inter, Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/></marker>
+    <marker id="arrR" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/></marker>
+    <marker id="arrI" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1e293b"/></marker>
+  </defs>
+  <rect width="800" height="500" fill="#f8fafc"/>
+  <rect x="0" y="0" width="800" height="64" fill="#ffffff"/>
+  <line x1="0" y1="64" x2="800" y2="64" stroke="#e2e8f0" stroke-width="2"/>
+  <circle cx="40" cy="32" r="20" fill="#2563eb"/>
+  <text x="40" y="39" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">1</text>
+  <text x="72" y="40" font-size="21" font-weight="800" fill="#1e293b">Persiapan &amp; Pengangkatan Kendaraan</text>
+  <text x="784" y="40" text-anchor="end" font-size="12" font-weight="700" fill="#64748b">JOB-001 · REM CAKRAM</text>
+  <g transform="translate(150,120) rotate(-4) scale(1.0)">
+    <path d="M20,120 L40,80 Q60,40 120,38 L250,36 Q300,36 340,76 L400,86 Q440,92 445,120 L445,140 L20,140 Z" fill="#e2e8f0" stroke="#1e293b" stroke-width="3"/>
+    <path d="M90,80 Q105,52 135,50 L190,50 L190,82 Z" fill="#bfdbfe" stroke="#1e293b" stroke-width="2"/>
+    <path d="M200,50 L250,50 Q285,52 312,82 L200,82 Z" fill="#bfdbfe" stroke="#1e293b" stroke-width="2"/>
+    <circle cx="105" cy="140" r="34" fill="#1e293b"/><circle cx="105" cy="140" r="15" fill="#cbd5e1"/>
+    <circle cx="355" cy="140" r="34" fill="#1e293b"/><circle cx="355" cy="140" r="15" fill="#cbd5e1"/>
+  </g>
+  <path d="M120,330 L160,330 L160,300 Z" fill="#d97706" stroke="#1e293b" stroke-width="2"/>
+  <line x1="40" y1="330" x2="760" y2="330" stroke="#64748b" stroke-width="3"/>
+  <rect x="520" y="300" width="120" height="22" rx="4" fill="#dc2626" stroke="#1e293b" stroke-width="2"/>
+  <rect x="560" y="268" width="14" height="34" fill="#94a3b8" stroke="#1e293b" stroke-width="2"/>
+  <rect x="548" y="258" width="38" height="12" fill="#cbd5e1" stroke="#1e293b" stroke-width="2"/>
+  <path d="M640,312 L740,312" stroke="#dc2626" stroke-width="8" stroke-linecap="round"/>
+  <path d="M410,330 L430,280 L450,330 Z" fill="none" stroke="#16a34a" stroke-width="5"/>
+  <rect x="424" y="262" width="12" height="22" fill="#16a34a" stroke="#1e293b" stroke-width="2"/>
+  <text x="140" y="360" font-size="14" font-weight="700" fill="#1e293b" text-anchor="middle">Ganjal roda belakang</text>
+  <text x="600" y="360" font-size="14" font-weight="700" fill="#dc2626" text-anchor="middle">Dongkrak di front crossmember</text>
+  <text x="430" y="385" font-size="14" font-weight="700" fill="#16a34a" text-anchor="middle">Jack stand di pinch weld</text>
+  <rect x="560" y="80" width="220" height="64" rx="10" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="670" y="106" font-size="14" font-weight="700" fill="#1e293b" text-anchor="middle">Kendurkan mur roda</text>
+  <text x="670" y="128" font-size="14" font-weight="500" fill="#1e293b" text-anchor="middle">saat roda masih menapak</text>
+  <text x="400" y="430" font-size="15" font-weight="700" fill="#dc2626" text-anchor="middle">⚠ Jangan bekerja di bawah kendaraan yang hanya ditahan dongkrak</text>
+
+  <rect x="0" y="456" width="800" height="44" fill="#eff6ff"/>
+  <text x="400" y="484" text-anchor="middle" font-size="16" font-weight="600" fill="#2563eb">Ganjal roda, dongkrak di titik tumpu, lalu tahan dengan jack stand</text>
+</svg>

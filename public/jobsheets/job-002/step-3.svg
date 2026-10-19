@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" font-family="Inter, Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/></marker>
+    <marker id="arrR" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/></marker>
+    <marker id="arrI" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1e293b"/></marker>
+  </defs>
+  <rect width="800" height="500" fill="#f8fafc"/>
+  <rect x="0" y="0" width="800" height="64" fill="#ffffff"/>
+  <line x1="0" y1="64" x2="800" y2="64" stroke="#e2e8f0" stroke-width="2"/>
+  <circle cx="40" cy="32" r="20" fill="#2563eb"/>
+  <text x="40" y="39" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">3</text>
+  <text x="72" y="40" font-size="21" font-weight="800" fill="#1e293b">Pengukuran Kedalaman &amp; Diameter Dalam Bushing</text>
+  <text x="784" y="40" text-anchor="end" font-size="12" font-weight="700" fill="#64748b">JOB-002 · ALAT UKUR PRESISI</text>
+  <g transform="translate(60,200) scale(0.85)">
+    <rect x="0" y="0" width="560" height="44" rx="4" fill="#cbd5e1" stroke="#1e293b" stroke-width="3"/>
+    <line x1="60" y1="0" x2="60" y2="14" stroke="#1e293b" stroke-width="2"/><line x1="72" y1="0" x2="72" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="84" y1="0" x2="84" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="96" y1="0" x2="96" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="108" y1="0" x2="108" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="120" y1="0" x2="120" y2="14" stroke="#1e293b" stroke-width="2"/><line x1="132" y1="0" x2="132" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="144" y1="0" x2="144" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="156" y1="0" x2="156" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="168" y1="0" x2="168" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="180" y1="0" x2="180" y2="14" stroke="#1e293b" stroke-width="2"/><line x1="192" y1="0" x2="192" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="204" y1="0" x2="204" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="216" y1="0" x2="216" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="228" y1="0" x2="228" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="240" y1="0" x2="240" y2="14" stroke="#1e293b" stroke-width="2"/><line x1="252" y1="0" x2="252" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="264" y1="0" x2="264" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="276" y1="0" x2="276" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="288" y1="0" x2="288" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="300" y1="0" x2="300" y2="14" stroke="#1e293b" stroke-width="2"/><line x1="312" y1="0" x2="312" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="324" y1="0" x2="324" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="336" y1="0" x2="336" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="348" y1="0" x2="348" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="360" y1="0" x2="360" y2="14" stroke="#1e293b" stroke-width="2"/><line x1="372" y1="0" x2="372" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="384" y1="0" x2="384" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="396" y1="0" x2="396" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="408" y1="0" x2="408" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="420" y1="0" x2="420" y2="14" stroke="#1e293b" stroke-width="2"/><line x1="432" y1="0" x2="432" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="444" y1="0" x2="444" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="456" y1="0" x2="456" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="468" y1="0" x2="468" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="480" y1="0" x2="480" y2="14" stroke="#1e293b" stroke-width="2"/><line x1="492" y1="0" x2="492" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="504" y1="0" x2="504" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="516" y1="0" x2="516" y2="8" stroke="#1e293b" stroke-width="2"/><line x1="528" y1="0" x2="528" y2="8" stroke="#1e293b" stroke-width="2"/>
+    <path d="M0,44 L0,170 L36,170 L50,44 Z" fill="#cbd5e1" stroke="#1e293b" stroke-width="3"/>
+    <path d="M10,0 L10,-50 L28,-50 L40,0 Z" fill="#cbd5e1" stroke="#1e293b" stroke-width="3"/>
+    <rect x="70" y="-6" width="150" height="60" rx="6" fill="#94a3b8" stroke="#1e293b" stroke-width="3"/>
+    <path d="M70,54 L70,170 L106,170 L92,54 Z" fill="#94a3b8" stroke="#1e293b" stroke-width="3"/>
+    <path d="M80,-6 L80,-50 L98,-50 L94,-6 Z" fill="#94a3b8" stroke="#1e293b" stroke-width="3"/>
+    <rect x="560" y="18" width="80" height="8" fill="#94a3b8" stroke="#1e293b" stroke-width="2"/>
+  </g>
+  <circle cx="102" cy="172" r="40" fill="none" stroke="#16a34a" stroke-width="6"/>
+  <rect x="550" y="290" width="120" height="80" fill="#e2e8f0" stroke="#1e293b" stroke-width="3"/>
+  <rect x="593" y="290" width="22" height="50" fill="#f8fafc" stroke="#1e293b" stroke-width="2"/>
+  <line x1="604" y1="223" x2="604" y2="336" stroke="#2563eb" stroke-width="4"/>
+  <text x="150" y="140" font-size="14" font-weight="700" fill="#16a34a" text-anchor="start">Rahang ukur dalam (inside jaws)</text>
+  <text x="150" y="160" font-size="13" font-weight="500" fill="#16a34a" text-anchor="start">→ diameter lubang bushing</text>
+  <text x="640" y="400" font-size="14" font-weight="700" fill="#2563eb" text-anchor="middle">Depth probe → kedalaman alur</text>
+  <rect x="60" y="375" width="440" height="70" rx="10" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="80" y="400" font-size="14" font-weight="600" fill="#1e293b" text-anchor="start">Baca skala utama + skala nonius (0,05 mm)</text>
+  <text x="80" y="426" font-size="14" font-weight="500" fill="#1e293b" text-anchor="start">Mata tegak lurus skala agar tidak terjadi paralaks</text>
+
+  <rect x="0" y="456" width="800" height="44" fill="#eff6ff"/>
+  <text x="400" y="484" text-anchor="middle" font-size="16" font-weight="600" fill="#2563eb">Inside jaws untuk diameter dalam, depth probe untuk kedalaman</text>
+</svg>
