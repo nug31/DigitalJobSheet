@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" font-family="Inter, Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrR" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arrI" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1e293b"/>
+    </marker>
+  </defs>
+  <rect width="800" height="500" fill="#f8fafc"/>
+  <rect x="0" y="0" width="800" height="64" fill="#ffffff"/>
+  <line x1="0" y1="64" x2="800" y2="64" stroke="#e2e8f0" stroke-width="2"/>
+  <circle cx="40" cy="32" r="20" fill="#2563eb"/>
+  <text x="40" y="39" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">4</text>
+  <text x="72" y="40" font-size="22" font-weight="800" fill="#1e293b">Pemeriksaan &amp; Pembersihan Saringan Udara</text>
+  <text x="784" y="40" text-anchor="end" font-size="13" font-weight="700" fill="#64748b">SERVIS 10.000 KM</text>
+  <rect x="200" y="140" width="400" height="200" rx="10" fill="#fef9c3" stroke="#1e293b" stroke-width="4"/>
+  <path d="M220,150 L220,150 L242,330 L264,150 L286,330 L308,150 L330,330 L352,150 L374,330 L396,150 L418,330 L440,150 L462,330 L484,150 L506,330 L528,150 L550,330 L572,150" fill="none" stroke="#d97706" stroke-width="3"/>
+  <rect x="180" y="128" width="440" height="20" rx="6" fill="#475569"/>
+  <rect x="180" y="332" width="440" height="20" rx="6" fill="#475569"/>
+  <text x="400" y="120" font-size="15" font-weight="800" fill="#1e293b" text-anchor="middle">ELEMEN SARINGAN UDARA</text>
+  <rect x="40" y="225" width="80" height="30" rx="6" fill="#dc2626" stroke="#1e293b" stroke-width="2"/>
+  <rect x="120" y="234" width="40" height="12" fill="#94a3b8" stroke="#1e293b" stroke-width="2"/>
+  <path d="M60,255 L50,300 L80,300 L85,255 Z" fill="#dc2626" stroke="#1e293b" stroke-width="2"/>
+  <text x="80" y="330" font-size="14" font-weight="700" fill="#1e293b" text-anchor="middle">Air gun</text>
+  <line x1="630" y1="195" x2="740" y2="195" stroke="#2563eb" stroke-width="4" marker-end="url(#arr)"/>
+  <line x1="630" y1="240" x2="740" y2="240" stroke="#2563eb" stroke-width="4" marker-end="url(#arr)"/>
+  <line x1="630" y1="285" x2="740" y2="285" stroke="#2563eb" stroke-width="4" marker-end="url(#arr)"/>
+  <line x1="165" y1="240" x2="215" y2="240" stroke="#2563eb" stroke-width="4" marker-end="url(#arr)" stroke-dasharray="8 5"/>
+  <text x="690" y="330" font-size="14" font-weight="700" fill="#2563eb" text-anchor="middle">Debu keluar</text>
+  <text x="400" y="395" font-size="16" font-weight="700" fill="#1e293b" text-anchor="middle">Semprot angin tekanan rendah dari sisi DALAM ke LUAR</text>
+  <text x="400" y="425" font-size="15" font-weight="700" fill="#dc2626" text-anchor="middle">Sobek / basah oli / sangat kotor → GANTI</text>
+
+  <rect x="0" y="456" width="800" height="44" fill="#eff6ff"/>
+  <text x="400" y="484" text-anchor="middle" font-size="16" font-weight="600" fill="#2563eb">Periksa elemen, bersihkan dengan angin, ganti bila rusak</text>
+</svg>

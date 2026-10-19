@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" font-family="Inter, Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrR" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arrI" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1e293b"/>
+    </marker>
+  </defs>
+  <rect width="800" height="500" fill="#f8fafc"/>
+  <rect x="0" y="0" width="800" height="64" fill="#ffffff"/>
+  <line x1="0" y1="64" x2="800" y2="64" stroke="#e2e8f0" stroke-width="2"/>
+  <circle cx="40" cy="32" r="20" fill="#2563eb"/>
+  <text x="40" y="39" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">1</text>
+  <text x="72" y="40" font-size="22" font-weight="800" fill="#1e293b">Persiapan Kendaraan &amp; Pemeriksaan Awal</text>
+  <text x="784" y="40" text-anchor="end" font-size="13" font-weight="700" fill="#64748b">SERVIS 10.000 KM</text>
+  <g transform="translate(70,140) scale(1.0)">
+    <path d="M20,120 L40,80 Q60,40 120,38 L250,36 Q300,36 340,76 L400,86 Q440,92 445,120 L445,140 L20,140 Z" fill="#e2e8f0" stroke="#1e293b" stroke-width="3"/>
+    <path d="M90,80 Q105,52 135,50 L190,50 L190,82 Z" fill="#bfdbfe" stroke="#1e293b" stroke-width="2"/>
+    <path d="M200,50 L250,50 Q285,52 312,82 L200,82 Z" fill="#bfdbfe" stroke="#1e293b" stroke-width="2"/>
+    <rect x="425" y="100" width="18" height="10" rx="2" fill="#fde68a" stroke="#1e293b" stroke-width="1.5"/>
+    <circle cx="105" cy="140" r="34" fill="#1e293b"/><circle cx="105" cy="140" r="15" fill="#cbd5e1"/>
+    <circle cx="355" cy="140" r="34" fill="#1e293b"/><circle cx="355" cy="140" r="15" fill="#cbd5e1"/>
+  </g>
+  <path d="M372,222 Q420,218 470,226 L478,252 Q425,236 372,250 Z" fill="#2563eb" opacity="0.9"/>
+  <line x1="470" y1="300" x2="440" y2="252" stroke="#1e293b" stroke-width="2" marker-end="url(#arrI)"/>
+  <text x="470" y="318" text-anchor="middle" font-size="14" font-weight="700" fill="#2563eb">Fender cover</text>
+  <path d="M100,330 L140,330 L140,300 Z" fill="#d97706" stroke="#1e293b" stroke-width="2"/>
+  <path d="M210,330 L170,330 L170,300 Z" fill="#d97706" stroke="#1e293b" stroke-width="2"/>
+  <line x1="40" y1="330" x2="560" y2="330" stroke="#64748b" stroke-width="3"/>
+  <line x1="120" y1="350" x2="140" y2="335" stroke="#1e293b" stroke-width="2" marker-end="url(#arrI)"/>
+  <text x="60" y="372" font-size="15" font-weight="700" fill="#1e293b" text-anchor="start">Ganjal roda (wheel chock)</text>
+  <rect x="590" y="100" width="170" height="230" rx="10" fill="#fff" stroke="#1e293b" stroke-width="3"/>
+  <rect x="640" y="88" width="70" height="24" rx="6" fill="#94a3b8"/>
+  <text x="675" y="140" text-anchor="middle" font-size="14" font-weight="800" fill="#1e293b">DATA AWAL</text>
+  <text x="606" y="172" font-size="13" fill="#64748b">No. Polisi</text><line x1="606" y1="182" x2="744" y2="182" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="606" y="208" font-size="13" fill="#64748b">Odometer</text>
+  <rect x="606" y="216" width="138" height="34" rx="6" fill="#1e293b"/>
+  <text x="675" y="240" text-anchor="middle" font-size="18" font-weight="800" fill="#4ade80" font-family="Consolas, monospace">10.000 km</text>
+  <text x="606" y="276" font-size="13" fill="#64748b">Keluhan</text><line x1="606" y1="300" x2="744" y2="300" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="300" y="400" text-anchor="middle" font-size="15" font-weight="700" fill="#1e293b">Hidupkan mesin 2–3 menit untuk menghangatkan oli</text>
+
+  <rect x="0" y="456" width="800" height="44" fill="#eff6ff"/>
+  <text x="400" y="484" text-anchor="middle" font-size="16" font-weight="600" fill="#2563eb">Pasang ganjal roda + fender/seat cover, lalu catat data kendaraan</text>
+</svg>
