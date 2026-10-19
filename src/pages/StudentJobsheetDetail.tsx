@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
-import { Storage } from '../lib/storage';
+import { Storage, isUuid, newId } from '../lib/storage';
 import { supabase } from '../lib/supabase';
 import type { Jobsheet, Submission, StepSubmissionData } from '../types';
 import {
@@ -248,7 +248,7 @@ export const StudentJobsheetDetail: React.FC = () => {
 
   const handleSaveDraft = () => {
     if (!profile || !jobsheet) return;
-    const submissionId = existingSubmission ? existingSubmission.id : `sub-${Date.now()}`;
+    const submissionId = existingSubmission && isUuid(existingSubmission.id) ? existingSubmission.id : newId();
     const newSubmission: Submission = {
       id: submissionId,
       jobsheet_id: jobsheet.id,
@@ -274,7 +274,7 @@ export const StudentJobsheetDetail: React.FC = () => {
   const handleSubmit = () => {
     if (!profile || !jobsheet) return;
     setTimerRunning(false);
-    const submissionId = existingSubmission ? existingSubmission.id : `sub-${Date.now()}`;
+    const submissionId = existingSubmission && isUuid(existingSubmission.id) ? existingSubmission.id : newId();
     const finalNotes = violations > 0
       ? `${studentNotes ? studentNotes + ' | ' : ''}[Sistem Pengawasan: Terdeteksi ${violations}x berpindah aplikasi/tab]`
       : studentNotes;

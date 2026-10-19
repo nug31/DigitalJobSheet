@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Storage, subscribeStorage } from '../lib/storage';
+import { Storage, subscribeStorage, startCloudSync } from '../lib/storage';
 import { useToast } from '../contexts/ToastContext';
 import type { UserProfile, ClassItem, SubjectItem } from '../types';
 import {
@@ -63,7 +63,12 @@ export const AdminDashboard: React.FC = () => {
       setJobsheets(Storage.getJobsheets());
       setSubmissions(Storage.getSubmissions());
     };
-    return subscribeStorage(update);
+    const unsubscribe = subscribeStorage(update);
+    const stopSync = startCloudSync();
+    return () => {
+      unsubscribe();
+      stopSync();
+    };
   }, []);
 
   // Open User Modal

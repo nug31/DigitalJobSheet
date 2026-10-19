@@ -1,4 +1,20 @@
 import type { Jobsheet, Submission, UserProfile, ClassItem, SubjectItem } from '../types';
+import { supabase, IS_DEMO_MODE } from './supabase';
+
+// Database id columns are UUID; ids like 'job-001' or 'sub-123' only live in this browser
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+export const isUuid = (id: string | undefined): boolean => !!id && UUID_RE.test(id);
+
+// crypto.randomUUID needs a secure context, so fall back when testing over plain http on LAN
+export const newId = (): string => {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+  });
+};
 
 // Default initial seed data with high-quality, matched automotive instruction images
 const DEFAULT_JOBSHEETS: Jobsheet[] = [
@@ -414,6 +430,11 @@ export const Storage = {
   deleteJobsheet(id: string): void {
     const list = this.getJobsheets().filter((j) => j.id !== id);
     setStoredData(STORAGE_KEYS.JOBSHEETS, list);
+    if (!IS_DEMO_MODE && isUuid(id)) {
+      (supabase.from('jobsheets') as any).delete().eq('id', id).then(({ error }: { error: unknown }) => {
+        if (error) console.warn('Supabase jobsheet delete failed:', error);
+      });
+    }
   },
 
   // SUBMISSIONS
@@ -430,7 +451,9 @@ export const Storage = {
   },
 
   saveSubmission(submission: Submission): void {
-    const list = this.getSubmissions();
+    const list = this.getSubmissions().filter(
+      (s) => s.id === submission.id || s.student_id !== submission.student_id || s.jobsheet_id !== submission.jobsheet_id
+    );
     const index = list.findIndex((s) => s.id === submission.id);
     if (index >= 0) {
       list[index] = submission;
@@ -438,6 +461,7 @@ export const Storage = {
       list.unshift(submission);
     }
     setStoredData(STORAGE_KEYS.SUBMISSIONS, list);
+    pushSubmissionToCloud(submission);
   },
 
   // USERS
@@ -534,4 +558,74 @@ export const Storage = {
     setStoredData(STORAGE_KEYS.CLASSES, DEFAULT_CLASSES);
     setStoredData(STORAGE_KEYS.SUBJECTS, DEFAULT_SUBJECTS);
   }
+};
+
+// CLOUD SYNC (Supabase) — localStorage stays the working cache, Supabase is shared across devices
+
+const pushSubmissionToCloud = (submission: Submission): void => {
+  if (IS_DEMO_MODE || !isUuid(submission.id) || !isUuid(submission.jobsheet_id) || !isUuid(submission.student_id)) return;
+  (supabase.from('submissions') as any)
+    .upsert(submission, { onConflict: 'id' })
+    .then(({ error }: { error: unknown }) => {
+      if (error) console.warn('Supabase submission sync failed:', error);
+    });
+};
+
+// Pull latest jobsheets and submissions into the local cache. RLS decides what each role sees:
+// students get only their own submissions, teachers/admins get all.
+export const syncFromCloud = async (): Promise<void> => {
+  if (IS_DEMO_MODE) return;
+  try {
+    const [jobRes, subRes] = await Promise.all([
+      (supabase.from('jobsheets') as any).select('*'),
+      (supabase.from('submissions') as any).select('*')
+    ]);
+
+    let changed = false;
+
+    if (!jobRes.error && Array.isArray(jobRes.data)) {
+      const cloudJobs = jobRes.data as Jobsheet[];
+      const cloudIds = new Set(cloudJobs.map((j) => j.id));
+      // Keep local-only items (seed data, or a save whose upload failed) so no work is lost
+      const localOnly = Storage.getJobsheets().filter((j) => !cloudIds.has(j.id));
+      const merged = [...cloudJobs.sort((a, b) => (b.created_at || '').localeCompare(a.created_at || '')), ...localOnly];
+      localStorage.setItem(STORAGE_KEYS.JOBSHEETS, JSON.stringify(merged));
+      changed = true;
+    }
+
+    if (!subRes.error && Array.isArray(subRes.data)) {
+      const cloudSubs = (subRes.data as Submission[]).map((s) => {
+        // Strip DB-only columns and nulls so they match the app's optional fields
+        const clean: Record<string, unknown> = {};
+        Object.entries(s).forEach(([k, v]) => {
+          if (v !== null && k !== 'created_at') clean[k] = v;
+        });
+        return clean as unknown as Submission;
+      });
+      const cloudIds = new Set(cloudSubs.map((s) => s.id));
+      const localOnly = Storage.getSubmissions().filter((s) => !cloudIds.has(s.id));
+      // Re-push anything that failed to upload earlier (e.g. offline)
+      localOnly.forEach(pushSubmissionToCloud);
+      localStorage.setItem(STORAGE_KEYS.SUBMISSIONS, JSON.stringify([...cloudSubs, ...localOnly]));
+      changed = true;
+    }
+
+    if (jobRes.error) console.warn('Supabase jobsheets fetch failed:', jobRes.error);
+    if (subRes.error) console.warn('Supabase submissions fetch failed:', subRes.error);
+    if (changed) notifyListeners();
+  } catch (err) {
+    console.warn('Supabase sync note:', err);
+  }
+};
+
+// Sync now, then poll so teachers see new submissions and students see grades without reloading
+export const startCloudSync = (intervalMs = 15000): (() => void) => {
+  syncFromCloud();
+  const timer = window.setInterval(syncFromCloud, intervalMs);
+  const onFocus = () => syncFromCloud();
+  window.addEventListener('focus', onFocus);
+  return () => {
+    window.clearInterval(timer);
+    window.removeEventListener('focus', onFocus);
+  };
 };

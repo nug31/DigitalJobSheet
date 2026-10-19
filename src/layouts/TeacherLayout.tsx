@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Storage, subscribeStorage } from '../lib/storage';
+import { Storage, subscribeStorage, startCloudSync } from '../lib/storage';
 import {
   BookOpen,
   BarChart3,
@@ -26,7 +26,12 @@ export const TeacherLayout: React.FC<{ children: React.ReactNode }> = ({ childre
     const update = () => {
       setPendingCount(Storage.getSubmissions().filter((s) => s.status === 'submitted').length);
     };
-    return subscribeStorage(update);
+    const unsubscribe = subscribeStorage(update);
+    const stopSync = startCloudSync();
+    return () => {
+      unsubscribe();
+      stopSync();
+    };
   }, []);
 
   const handleLogout = async () => {

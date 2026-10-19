@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Storage } from '../lib/storage';
+import { Storage, isUuid, newId } from '../lib/storage';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
@@ -172,7 +172,7 @@ export const TeacherJobsheetCreate: React.FC = () => {
     }
 
     const savedJob: Jobsheet = {
-      id: existingJob?.id || `job-${Date.now()}`,
+      id: existingJob && isUuid(existingJob.id) ? existingJob.id : newId(),
       code: code.trim(),
       title: title.trim(),
       subject: subject.trim(),
@@ -191,6 +191,8 @@ export const TeacherJobsheetCreate: React.FC = () => {
     };
 
     // 1. Save to localStorage for instant local reactivity
+    // (a legacy local id is replaced by a UUID so the database accepts it)
+    if (existingJob && existingJob.id !== savedJob.id) Storage.deleteJobsheet(existingJob.id);
     Storage.saveJobsheet(savedJob);
 
     // 2. Sync to Supabase so students on any device can see updated photos

@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { LogOut, BookOpen, Award, Home, User } from 'lucide-react';
+import { startCloudSync } from '../lib/storage';
 
 export const StudentLayout: React.FC = () => {
   const { profile, signOut } = useAuth();
   const navigate = useNavigate();
+
+  // Keep jobsheets and grades from the teacher in sync on the student's device
+  useEffect(() => startCloudSync(), []);
 
   const handleLogout = async () => {
     await signOut();
