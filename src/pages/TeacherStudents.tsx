@@ -209,7 +209,42 @@ export const TeacherStudents: React.FC = () => {
             </button>
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <>
+          {/* Phones: compact student cards instead of a wide table */}
+          <div className="sm:hidden divide-y divide-slate-100">
+            {filteredUsers.map((u) => {
+              const subs = submissions.filter((s) => s.student_id === u.id);
+              const graded = subs.filter((s) => s.status === 'graded');
+              const avg =
+                graded.length > 0
+                  ? Math.round(graded.reduce((a, b) => a + (b.total_score || 0), 0) / graded.length)
+                  : 0;
+              return (
+                <button
+                  key={u.id}
+                  type="button"
+                  onClick={() => setSelectedStudent(u)}
+                  className="w-full text-left p-4 flex items-center gap-3 active:bg-slate-50"
+                >
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-black text-xs flex items-center justify-center shrink-0">
+                    {(u.full_name || 'S').charAt(0).toUpperCase()}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-bold text-slate-900 text-sm leading-snug">{u.full_name || 'Tanpa Nama'}</p>
+                    <p className="text-[11px] text-slate-400">
+                      {u.nis_nip || '-'} &bull; {u.class_name || '-'} &bull; {graded.length} Jobsheet dinilai
+                    </p>
+                  </div>
+                  <span className={`font-black text-sm px-2.5 py-1 rounded-lg shrink-0 ${avg >= 75 ? 'bg-emerald-100 text-emerald-800' : avg > 0 ? 'bg-blue-50 text-blue-700' : 'bg-slate-100 text-slate-400'}`}>
+                    {avg > 0 ? avg : '-'}
+                  </span>
+                  <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="hidden sm:block overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm whitespace-nowrap">
               <thead className="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
                 <tr>
@@ -292,6 +327,7 @@ export const TeacherStudents: React.FC = () => {
               </tbody>
             </table>
           </div>
+          </>
         )}
       </div>
 

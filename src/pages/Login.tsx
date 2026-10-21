@@ -10,14 +10,15 @@ export const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { signIn, profile } = useAuth();
+  const { signIn, user, profile } = useAuth();
   const navigate = useNavigate();
 
   // Single place that leaves the login page once a profile exists (after signIn or an existing
   // session), so a saved QR deep link is never overtaken by a dashboard redirect
   useEffect(() => {
-    if (profile) navigate(takePostLoginPath(profile.role), { replace: true });
-  }, [profile, navigate]);
+    // Requires the same user + profile pair ProtectedRoute checks, so the two never bounce
+    if (user && profile) navigate(takePostLoginPath(profile.role), { replace: true });
+  }, [user, profile, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

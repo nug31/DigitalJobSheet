@@ -80,11 +80,11 @@ export const StudentJobsheetList: React.FC = () => {
           />
         </div>
 
-        <div className="flex gap-2 w-full md:w-auto overflow-x-auto hide-scrollbar">
+        <div className="flex gap-2 w-full md:w-auto min-w-0">
           <select
             value={subjectFilter}
             onChange={(e) => setSubjectFilter(e.target.value)}
-            className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full md:w-auto min-w-0 max-w-full truncate bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="all">Semua Mata Pelajaran</option>
             {subjects.map((s) => (

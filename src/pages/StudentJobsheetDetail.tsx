@@ -530,9 +530,9 @@ export const StudentJobsheetDetail: React.FC = () => {
       {/* Tabs Menu */}
       <div className="grid grid-cols-3 bg-white rounded-2xl p-1.5 shadow-sm border border-slate-100 gap-1">
         {[
-          { id: 'info', label: '1. Tujuan & SOP', icon: BookOpen },
-          { id: 'k3', label: '2. Alat & K3', icon: Shield },
-          { id: 'steps', label: '3. Praktik & Ukur', icon: Wrench }
+          { id: 'info', label: '1. Tujuan & SOP', short: 'Tujuan', icon: BookOpen },
+          { id: 'k3', label: '2. Alat & K3', short: 'Alat & K3', icon: Shield },
+          { id: 'steps', label: '3. Praktik & Ukur', short: 'Praktik', icon: Wrench }
         ].map((tab) => (
           <button
             key={tab.id}
@@ -544,7 +544,8 @@ export const StudentJobsheetDetail: React.FC = () => {
             }`}
           >
             <tab.icon className="w-4 h-4 shrink-0" />
-            <span className="truncate">{tab.label}</span>
+            <span className="truncate sm:hidden">{tab.short}</span>
+            <span className="truncate hidden sm:inline">{tab.label}</span>
           </button>
         ))}
       </div>
@@ -739,9 +740,9 @@ export const StudentJobsheetDetail: React.FC = () => {
                           alt={step.title}
                           loading="lazy"
                           onError={() => setFailedImages((prev) => ({ ...prev, [step.id]: true }))}
-                          className="w-full h-48 sm:h-56 object-cover group-hover:scale-105 transition-transform duration-500"
+                          className="w-full aspect-[8/5] object-cover bg-white group-hover:scale-105 transition-transform duration-500"
                         />
-                        <div className="absolute top-2.5 left-2.5 bg-black/75 backdrop-blur-md px-2.5 py-1 rounded-lg text-[10px] font-bold text-white flex items-center gap-1.5 shadow-sm">
+                        <div className="absolute bottom-2.5 right-2.5 bg-black/75 backdrop-blur-md px-2.5 py-1 rounded-lg text-[10px] font-bold text-white hidden sm:flex items-center gap-1.5 shadow-sm">
                           <ImageIcon className="w-3 h-3 text-blue-400" />
                           <span>Panduan SOP Visual</span>
                         </div>

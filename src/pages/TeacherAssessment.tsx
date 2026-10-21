@@ -118,7 +118,7 @@ export const TeacherAssessment: React.FC = () => {
           />
         </div>
 
-        <div className="flex gap-2 w-full sm:w-auto overflow-x-auto hide-scrollbar">
+        <div className="flex flex-wrap gap-2 w-full sm:w-auto">
           {[
             { id: 'all', label: 'Semua Submission' },
             { id: 'submitted', label: 'Menunggu Nilai' },
@@ -141,7 +141,50 @@ export const TeacherAssessment: React.FC = () => {
 
       {/* Submissions Table */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <div className="overflow-x-auto">
+        {/* Phones: one card per submission with the grade button in reach */}
+        <div className="sm:hidden divide-y divide-slate-100">
+          {filteredSubmissions.map((sub) => (
+            <div key={sub.id} className="p-4 space-y-2.5">
+              <div className="flex items-start gap-3">
+                <div className="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-xs shrink-0">
+                  {sub.student_name.charAt(0)}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="font-bold text-slate-900 text-sm leading-snug">{sub.student_name}</p>
+                  <p className="text-[11px] text-slate-400">NIS: {sub.student_nis} &bull; {sub.class_name}</p>
+                  <p className="text-xs mt-1">
+                    <span className="font-bold text-blue-600">{sub.jobsheet_code}</span>{' '}
+                    <span className="text-slate-700">{sub.jobsheet_title}</span>
+                  </p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    {Math.round(sub.duration_seconds / 60)} Menit &bull; {new Date(sub.start_time).toLocaleDateString('id-ID')}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between gap-2">
+                {sub.status === 'graded' ? (
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-800">
+                    <CheckCircle2 className="w-3.5 h-3.5" /> {sub.total_score} ({sub.competency_status})
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-amber-100 text-amber-800">
+                    <Clock className="w-3.5 h-3.5" /> Menunggu Nilai
+                  </span>
+                )}
+                <button
+                  onClick={() => openGradingModal(sub)}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold shrink-0 ${
+                    sub.status === 'graded' ? 'bg-slate-100 text-slate-700' : 'bg-amber-500 text-slate-950 shadow-sm'
+                  }`}
+                >
+                  {sub.status === 'graded' ? 'Edit Nilai' : 'Beri Nilai'}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="hidden sm:block overflow-x-auto">
           <table className="w-full text-left text-xs sm:text-sm whitespace-nowrap">
             <thead className="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
               <tr>

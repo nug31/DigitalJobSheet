@@ -104,7 +104,41 @@ export const TeacherJobsheetList: React.FC = () => {
 
       {/* Table */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <div className="overflow-x-auto">
+        {/* Phones: cards with the actions in reach instead of a wide table */}
+        <div className="sm:hidden divide-y divide-slate-100">
+          {filteredJobsheets.map((job) => (
+            <div key={job.id} className="p-4 space-y-2.5">
+              <div>
+                <span className="font-black text-blue-600 text-xs">{job.code}</span>
+                <span className="ml-2 px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 text-slate-700">{job.target_class}</span>
+                <p className="font-bold text-slate-900 text-sm leading-snug mt-1">{job.title}</p>
+                <p className="text-[11px] text-slate-400 mt-0.5">
+                  {job.subject} &bull; ± {job.duration} Menit &bull; {job.steps?.length || 0} Langkah
+                </p>
+              </div>
+              <div className="grid grid-cols-5 gap-1.5">
+                {[
+                  { label: 'Lihat', icon: Eye, onClick: () => setPreviewJobsheet(job), cls: 'text-blue-600 bg-blue-50' },
+                  { label: 'QR', icon: QrCode, onClick: () => setSelectedQRJobsheet(job), cls: 'text-purple-600 bg-purple-50' },
+                  { label: 'Duplikat', icon: Copy, onClick: () => handleDuplicate(job), cls: 'text-indigo-600 bg-indigo-50' },
+                  { label: 'Edit', icon: Edit, onClick: () => navigate(`/teacher/jobsheets/edit/${job.id}`), cls: 'text-amber-600 bg-amber-50' },
+                  { label: 'Hapus', icon: Trash2, onClick: () => setDeleteId(job.id), cls: 'text-rose-600 bg-rose-50' }
+                ].map((a) => (
+                  <button
+                    key={a.label}
+                    onClick={a.onClick}
+                    className={`flex flex-col items-center gap-0.5 py-2 rounded-xl text-[10px] font-bold ${a.cls}`}
+                  >
+                    <a.icon className="w-4 h-4" />
+                    {a.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="hidden sm:block overflow-x-auto">
           <table className="w-full text-left text-xs sm:text-sm whitespace-nowrap">
             <thead className="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
               <tr>

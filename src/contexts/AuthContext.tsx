@@ -47,6 +47,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (session?.user && isMounted) {
           setUser(session.user);
           await fetchProfile(session.user.id);
+        } else if (isMounted) {
+          // No session (expired / signed out elsewhere): drop the cached profile, otherwise
+          // Login (profile set) and ProtectedRoute (no user) redirect to each other forever
+          setProfile(null);
+          sessionStorage.removeItem('mitra_profile');
+          localStorage.removeItem('mitra_profile');
         }
       } catch (err) {
         console.warn('Initial session check note:', err);

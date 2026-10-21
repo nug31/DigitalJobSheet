@@ -183,7 +183,7 @@ export const StudentDashboard: React.FC = () => {
           />
         </div>
 
-        <div className="flex gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0 hide-scrollbar">
+        <div className="flex flex-wrap gap-2 w-full sm:w-auto">
           {[
             { id: 'all', label: 'Semua Jobsheet' },
             { id: 'not_started', label: 'Belum Dikerjakan' },
