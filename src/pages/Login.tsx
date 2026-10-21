@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { takePostLoginPath } from '../lib/redirect';
 import { BookOpen, AlertCircle, Loader2 } from 'lucide-react';
 
 export const Login: React.FC = () => {
@@ -12,13 +13,10 @@ export const Login: React.FC = () => {
   const { signIn, profile } = useAuth();
   const navigate = useNavigate();
 
-  // If already logged in, redirect immediately
+  // Single place that leaves the login page once a profile exists (after signIn or an existing
+  // session), so a saved QR deep link is never overtaken by a dashboard redirect
   useEffect(() => {
-    if (profile) {
-      if (profile.role === 'admin') navigate('/admin/dashboard', { replace: true });
-      else if (profile.role === 'teacher') navigate('/teacher/dashboard', { replace: true });
-      else navigate('/student/dashboard', { replace: true });
-    }
+    if (profile) navigate(takePostLoginPath(profile.role), { replace: true });
   }, [profile, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -36,23 +34,7 @@ export const Login: React.FC = () => {
         return;
       }
 
-      // Check if there's a saved redirect URL from QR scan (saved by ProtectedRoute)
-      const savedRedirect = sessionStorage.getItem('mitra_redirect_after_login');
-      if (savedRedirect) {
-        sessionStorage.removeItem('mitra_redirect_after_login');
-        navigate(savedRedirect, { replace: true });
-        return;
-      }
-
-      // Successful login - navigate to role-appropriate dashboard
-      const activeRole = res.profile?.role || (identifier.includes('@') ? 'teacher' : 'student');
-      if (activeRole === 'admin') {
-        navigate('/admin/dashboard', { replace: true });
-      } else if (activeRole === 'teacher') {
-        navigate('/teacher/dashboard', { replace: true });
-      } else {
-        navigate('/student/dashboard', { replace: true });
-      }
+      // Successful login: the profile effect above navigates (to the QR jobsheet if one was saved)
     } catch (err: any) {
       console.error('Login submit error:', err);
       setError('Terjadi kendala saat login. Silakan coba kembali.');

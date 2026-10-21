@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { saveRedirectAfterLogin, pathForRole } from '../lib/redirect';
 
 type Role = 'student' | 'teacher' | 'admin';
 
@@ -23,17 +24,12 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowe
 
   if (!user || !profile) {
     // Save the intended destination so we can redirect after login
-    const redirectAfter = location.pathname + location.search;
-    if (redirectAfter && redirectAfter !== '/' && redirectAfter !== '/login') {
-      sessionStorage.setItem('mitra_redirect_after_login', redirectAfter);
-    }
+    saveRedirectAfterLogin(location.pathname + location.search);
     return <Navigate to="/login" replace />;
   }
 
   if (allowedRoles && !allowedRoles.includes(profile.role)) {
-    if (profile.role === 'admin') return <Navigate to="/admin/dashboard" replace />;
-    if (profile.role === 'teacher') return <Navigate to="/teacher/dashboard" replace />;
-    return <Navigate to="/student/dashboard" replace />;
+    return <Navigate to={pathForRole(profile.role, location.pathname)} replace />;
   }
 
   return <>{children}</>;
