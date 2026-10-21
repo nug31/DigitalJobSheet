@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import type { User } from '@supabase/supabase-js';
 import { supabase, IS_DEMO_MODE } from '../lib/supabase';
 import { Storage } from '../lib/storage';
+import { normalizeNisn } from '../lib/nisn';
 import type { UserProfile } from '../types';
 
 interface AuthContextType {
@@ -104,8 +105,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     identifier: string,
     password: string
   ): Promise<{ error: string | null; profile?: UserProfile | null }> => {
-    const cleanId = identifier.trim();
-    const cleanPassword = password.trim();
+    // Students sometimes type their NISN without the leading zero
+    const isEmail = identifier.includes('@');
+    const cleanId = isEmail ? identifier.trim() : normalizeNisn(identifier);
+    const cleanPassword = isEmail ? password.trim() : normalizeNisn(password);
 
     if (!cleanId || !cleanPassword) {
       return { error: 'Silakan isi Username/NISN dan Password.' };
@@ -172,10 +175,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      let { data, error } = await supabase.auth.signInWithPassword({
         email: emailToAuth,
         password: cleanPassword
       });
+
+      // Older imports created accounts with the leading zeros stripped (0111722356 -> 111722356)
+      const strippedId = cleanId.replace(/^0+/, '');
+      if (!data?.user && !isEmail && strippedId && strippedId !== cleanId) {
+        const retry = await supabase.auth.signInWithPassword({
+          email: `${strippedId}@siswa.mitra.sch.id`,
+          password: cleanPassword === cleanId ? strippedId : cleanPassword
+        });
+        if (retry.data?.user) ({ data, error } = retry);
+      }
 
       if (data?.user) {
         const fetched = await fetchProfile(data.user.id);

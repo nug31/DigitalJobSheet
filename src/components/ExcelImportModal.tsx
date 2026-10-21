@@ -3,6 +3,7 @@ import * as XLSX from 'xlsx';
 import { useToast } from '../contexts/ToastContext';
 import { Storage } from '../lib/storage';
 import { supabase } from '../lib/supabase';
+import { normalizeNisn, studentEmail as emailForNisn, buildStudentAccountSQL } from '../lib/nisn';
 import type { UserProfile } from '../types';
 import {
   FileSpreadsheet,
@@ -83,7 +84,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
     const dataLines = lines.slice(1);
     return dataLines.map((line) => {
       const parts = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map((p) => p.replace(/^"|"$/g, '').trim());
-      const nisn = parts[0] || '';
+      const nisn = normalizeNisn(parts[0]);
       const fullName = parts[1] || '';
       const className = parts[2] || 'X TKR 2';
       const email = `${nisn}@siswa.mitra.sch.id`;
@@ -143,9 +144,9 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
         }
 
         const parsed: ParsedStudent[] = rawJson.map((row) => {
-          const nisn = String(
+          const nisn = normalizeNisn(
             row['NISN'] || row['nisn'] || row['NIS'] || row['nis'] || row['Nomor Induk'] || row['no_induk'] || ''
-          ).trim();
+          );
 
           const fullName = String(
             row['Nama Lengkap'] || row['Nama'] || row['nama'] || row['nama_lengkap'] || row['Nama Siswa'] || ''
@@ -202,9 +203,10 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
 
     setIsSaving(true);
     let addedCount = 0;
+    const failedNames: string[] = [];
 
     for (const st of validStudents) {
-      const studentEmail = st.email || `${st.nisn}@siswa.mitra.sch.id`;
+      const studentEmail = st.email || emailForNisn(st.nisn);
       const newProfile: UserProfile = {
         id: `student-${st.nisn}`,
         full_name: st.fullName,
@@ -229,8 +231,9 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
           class_name: newProfile.class_name
         });
 
-        // 3. Pre-register to Supabase Auth so NISN password is valid immediately
-        await supabase.auth.signUp({
+        // 3. Pre-register to Supabase Auth so NISN password is valid immediately.
+        // Supabase rate-limits sign-ups, so failures are collected and reported instead of ignored.
+        const { error: signUpError } = await supabase.auth.signUp({
           email: studentEmail,
           password: st.nisn,
           options: {
@@ -242,36 +245,39 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
             }
           }
         });
+        if (signUpError && !/already registered|already exists/i.test(signUpError.message)) {
+          console.warn(`Supabase signUp failed for ${st.nisn}:`, signUpError.message);
+          failedNames.push(st.fullName);
+        }
+        // Pace requests to stay under the sign-up rate limit
+        await new Promise((r) => setTimeout(r, 400));
       } catch (err) {
         console.warn(`Supabase sync note for ${st.nisn}:`, err);
+        failedNames.push(st.fullName);
       }
 
       addedCount++;
     }
 
     setIsSaving(false);
-    toast.success(
-      'Import & Aktivasi Berhasil!',
-      `${addedCount} siswa berhasil ditambahkan. Seluruh siswa langsung bisa login menggunakan NISN & Password = NISN.`
-    );
+    if (failedNames.length > 0) {
+      toast.error(
+        `${failedNames.length} Akun Belum Aktif`,
+        `Gagal membuat akun login untuk: ${failedNames.slice(0, 5).join(', ')}${failedNames.length > 5 ? ', dll' : ''}. Klik "Copy SQL" lalu jalankan di Supabase SQL Editor.`
+      );
+    } else {
+      toast.success(
+        'Import & Aktivasi Berhasil!',
+        `${addedCount} siswa berhasil ditambahkan. Seluruh siswa langsung bisa login menggunakan NISN & Password = NISN.`
+      );
+    }
     if (onSuccess) onSuccess();
-    onClose();
+    // Keep the modal open on failures so the teacher can copy the repair SQL
+    if (failedNames.length === 0) onClose();
   };
 
   // Generate Supabase SQL Insert
-  const generateSupabaseSQL = () => {
-    const validStudents = parsedList.filter((p) => p.valid);
-    if (validStudents.length === 0) return '-- Tidak ada data siswa yang valid.';
-
-    const queries = validStudents
-      .map(
-        (st) =>
-          `SELECT create_student_account('${st.nisn}', '${st.fullName.replace(/'/g, "''")}', '${st.className.replace(/'/g, "''")}');`
-      )
-      .join('\n');
-
-    return `-- Eksekusi pembuatan akun siswa batch di Supabase SQL Editor:\n-- Password default diset otomatis sama dengan NISN\n\n${queries}`;
-  };
+  const generateSupabaseSQL = () => buildStudentAccountSQL(parsedList.filter((p) => p.valid));
 
   const handleCopySQL = () => {
     navigator.clipboard.writeText(generateSupabaseSQL());

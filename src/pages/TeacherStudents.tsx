@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 import { useToast } from '../contexts/ToastContext';
 import type { UserProfile, Submission } from '../types';
 import { ExcelImportModal } from '../components/ExcelImportModal';
+import { buildStudentAccountSQL } from '../lib/nisn';
 import {
   Search,
   CheckCircle2,
@@ -12,7 +13,8 @@ import {
   X,
   FileSpreadsheet,
   Upload,
-  UserPlus
+  UserPlus,
+  KeyRound
 } from 'lucide-react';
 
 export const TeacherStudents: React.FC = () => {
@@ -98,6 +100,27 @@ export const TeacherStudents: React.FC = () => {
     toast.success('Rekap CSV Berhasil Diunduh', 'File rekap nilai siswa telah disimpan.');
   };
 
+  // Repair SQL for every student in the selected class, so logins can be fixed without re-importing Excel
+  const handleCopyAccountSQL = async () => {
+    const targets = users.filter((u) => u.nis_nip && (classFilter === 'all' || u.class_name === classFilter));
+    if (targets.length === 0) {
+      toast.error('Tidak Ada Siswa', 'Belum ada data siswa dengan NISN untuk dibuatkan akun.');
+      return;
+    }
+    const sql = buildStudentAccountSQL(
+      targets.map((u) => ({ nisn: u.nis_nip || '', fullName: u.full_name, className: u.class_name || '' }))
+    );
+    try {
+      await navigator.clipboard.writeText(sql);
+      toast.success(
+        `SQL ${targets.length} Siswa Tersalin`,
+        'Buka Supabase > SQL Editor, tempel (Ctrl+V), lalu klik Run.'
+      );
+    } catch {
+      toast.error('Gagal Menyalin', 'Browser menolak akses clipboard. Coba lagi lewat Chrome di laptop.');
+    }
+  };
+
   const studentSubmissions: Submission[] = selectedStudent
     ? submissions.filter((s) => s.student_id === selectedStudent.id)
     : [];
@@ -113,13 +136,21 @@ export const TeacherStudents: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={() => setIsImportOpen(true)}
             className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs sm:text-sm shadow-md shadow-blue-500/20 transition-all active:scale-95 cursor-pointer"
           >
             <Upload className="w-4 h-4" /> Import Siswa (Excel)
+          </button>
+          <button
+            type="button"
+            onClick={handleCopyAccountSQL}
+            title="Salin SQL untuk membuat / memperbaiki akun login siswa (kelas yang sedang difilter)"
+            className="flex items-center gap-2 px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold text-xs sm:text-sm shadow-md shadow-amber-500/20 transition-all active:scale-95 cursor-pointer"
+          >
+            <KeyRound className="w-4 h-4" /> Salin SQL Perbaikan Akun
           </button>
           <button
             type="button"
