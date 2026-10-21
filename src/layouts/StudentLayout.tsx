@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { LogOut, BookOpen, Award, Home, User } from 'lucide-react';
 import { startCloudSync } from '../lib/storage';
@@ -7,6 +7,8 @@ import { startCloudSync } from '../lib/storage';
 export const StudentLayout: React.FC = () => {
   const { profile, signOut } = useAuth();
   const navigate = useNavigate();
+  // The jobsheet page has its own bottom action bar (Draf / Kumpulkan); the mobile nav would cover it
+  const isWorkingOnJobsheet = useLocation().pathname.startsWith('/student/jobsheet/');
 
   // Keep jobsheets and grades from the teacher in sync on the student's device
   useEffect(() => startCloudSync(), []);
@@ -96,29 +98,31 @@ export const StudentLayout: React.FC = () => {
       </main>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 flex justify-around items-center z-50 px-2 py-2 safe-area-pb shadow-lg">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            className={({ isActive }) =>
-              `flex flex-col items-center py-1 px-3 rounded-xl transition-colors ${
-                isActive ? 'text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-800'
-              }`
-            }
+      {!isWorkingOnJobsheet && (
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 flex justify-around items-center z-50 px-2 py-2 safe-area-pb shadow-lg">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                `flex flex-col items-center py-1 px-3 rounded-xl transition-colors ${
+                  isActive ? 'text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-800'
+                }`
+              }
+            >
+              <item.icon className="w-5 h-5" />
+              <span className="text-[10px] mt-1">{item.label}</span>
+            </NavLink>
+          ))}
+          <button
+            onClick={handleLogout}
+            className="flex flex-col items-center py-1 px-3 rounded-xl text-slate-500 hover:text-rose-600"
           >
-            <item.icon className="w-5 h-5" />
-            <span className="text-[10px] mt-1">{item.label}</span>
-          </NavLink>
-        ))}
-        <button
-          onClick={handleLogout}
-          className="flex flex-col items-center py-1 px-3 rounded-xl text-slate-500 hover:text-rose-600"
-        >
-          <LogOut className="w-5 h-5" />
-          <span className="text-[10px] mt-1">Keluar</span>
-        </button>
-      </nav>
+            <LogOut className="w-5 h-5" />
+            <span className="text-[10px] mt-1">Keluar</span>
+          </button>
+        </nav>
+      )}
     </div>
   );
 };

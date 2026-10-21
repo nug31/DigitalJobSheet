@@ -882,7 +882,7 @@ export const StudentJobsheetDetail: React.FC = () => {
 
       {/* Floating Bottom Sticky Action Bar (For effortless mobile/desktop submission) */}
       {!isReadOnly ? (
-        <div className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 sm:p-4 z-40 shadow-xl">
+        <div className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 sm:p-4 z-40 shadow-xl" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
           <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
             <button
               onClick={handleSaveDraft}
