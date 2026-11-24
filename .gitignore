@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Student personal data (names, NISN) — never commit
+supabase/private/

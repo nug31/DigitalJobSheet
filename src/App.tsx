@@ -15,6 +15,7 @@ import { TeacherJobsheetCreate } from './pages/TeacherJobsheetCreate';
 import { TeacherAssessment } from './pages/TeacherAssessment';
 import { TeacherStudents } from './pages/TeacherStudents';
 import { AdminDashboard } from './pages/AdminDashboard';
+import { ExhibitionMode } from './pages/ExhibitionMode';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
 // Root Redirect based on user authentication and role
@@ -121,6 +122,16 @@ function App() {
                   <TeacherLayout>
                     <TeacherStudents />
                   </TeacherLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Full-screen projector monitor, without the portal sidebar */}
+            <Route
+              path="/teacher/pameran"
+              element={
+                <ProtectedRoute allowedRoles={['teacher']}>
+                  <ExhibitionMode />
                 </ProtectedRoute>
               }
             />

@@ -11,7 +11,8 @@ import {
   LogOut,
   Menu,
   X,
-  Plus
+  Plus,
+  MonitorPlay
 } from 'lucide-react';
 
 export const TeacherLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -47,6 +48,7 @@ export const TeacherLayout: React.FC<{ children: React.ReactNode }> = ({ childre
     { to: '/teacher/jobsheets', icon: FileText, label: 'Manajemen Jobsheet' },
     { to: '/teacher/assessment', icon: CheckSquare, label: 'Penilaian Siswa', badge: pendingCount > 0 ? pendingCount : undefined },
     { to: '/teacher/students', icon: Users, label: 'Data & Rekap Siswa' },
+    { to: '/teacher/pameran', icon: MonitorPlay, label: 'Mode Pameran (Live)' },
   ];
 
   return (

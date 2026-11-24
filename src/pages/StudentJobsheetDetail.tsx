@@ -177,9 +177,24 @@ export const StudentJobsheetDetail: React.FC = () => {
     }
   };
 
+  // Snapshot of the last saved progress, so auto-save only fires on real changes
+  const lastSavedRef = useRef('');
+  const progressSnapshot = (
+    safety: Record<string, boolean>,
+    materials: Record<string, boolean>,
+    steps: Record<string, StepSubmissionData>,
+    measurements: Record<string, string>
+  ) => JSON.stringify([safety, materials, steps, measurements]);
+
   // Initialize state from existing submission if any
   useEffect(() => {
     if (existingSubmission) {
+      lastSavedRef.current = progressSnapshot(
+        existingSubmission.safety_checks || {},
+        existingSubmission.material_checks || {},
+        existingSubmission.step_data || {},
+        existingSubmission.measurements_data || {}
+      );
       setSafetyChecks(existingSubmission.safety_checks || {});
       setMaterialChecks(existingSubmission.material_checks || {});
       setStepData(existingSubmission.step_data || {});
@@ -246,7 +261,7 @@ export const StudentJobsheetDetail: React.FC = () => {
     }));
   };
 
-  const handleSaveDraft = () => {
+  const saveDraft = (silent: boolean) => {
     if (!profile || !jobsheet) return;
     const submissionId = existingSubmission && isUuid(existingSubmission.id) ? existingSubmission.id : newId();
     const newSubmission: Submission = {
@@ -267,9 +282,22 @@ export const StudentJobsheetDetail: React.FC = () => {
       student_notes: studentNotes,
       status: 'draft'
     };
+    lastSavedRef.current = progressSnapshot(safetyChecks, materialChecks, stepData, measurementsData);
     Storage.saveSubmission(newSubmission);
-    toast.success('Draf Disimpan', 'Progres praktik Anda tersimpan dengan aman.');
+    if (!silent) toast.success('Draf Disimpan', 'Progres praktik Anda tersimpan dengan aman.');
   };
+
+  const handleSaveDraft = () => saveDraft(false);
+
+  // Auto-save progress shortly after each change: keeps work safe if the phone dies and
+  // lets the teacher's Mode Pameran monitor show live progress
+  useEffect(() => {
+    if (isReadOnly || !profile || !jobsheet) return;
+    const snapshot = progressSnapshot(safetyChecks, materialChecks, stepData, measurementsData);
+    if (snapshot === lastSavedRef.current || snapshot === progressSnapshot({}, {}, {}, {})) return;
+    const timer = window.setTimeout(() => saveDraft(true), 2000);
+    return () => window.clearTimeout(timer);
+  }, [safetyChecks, materialChecks, stepData, measurementsData]);
 
   const handleSubmit = () => {
     if (!profile || !jobsheet) return;

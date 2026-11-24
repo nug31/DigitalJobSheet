@@ -373,6 +373,13 @@ const notifyListeners = () => {
   window.dispatchEvent(new CustomEvent('mitra-storage-update'));
 };
 
+// Changes made in another tab of the same browser (e.g. a student page next to Mode Pameran)
+if (typeof window !== 'undefined') {
+  window.addEventListener('storage', (e) => {
+    if (e.key?.startsWith('mitra_')) listeners.forEach((cb) => cb());
+  });
+}
+
 export const subscribeStorage = (callback: StorageListener) => {
   listeners.add(callback);
   return () => {
