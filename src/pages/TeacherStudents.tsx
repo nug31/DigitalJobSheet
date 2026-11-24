@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Storage, subscribeStorage } from '../lib/storage';
+import { groupClasses } from '../lib/classes';
 import { supabase } from '../lib/supabase';
 import { useToast } from '../contexts/ToastContext';
 import type { UserProfile, Submission } from '../types';
@@ -49,13 +50,7 @@ export const TeacherStudents: React.FC = () => {
     return subscribeStorage(fetchAllStudents);
   }, []);
 
-  const classes = Array.from(
-    new Set(
-      users
-        .map((u) => u.class_name)
-        .filter((c): c is string => Boolean(c && c.trim()))
-    )
-  );
+  const classGroups = groupClasses(users.map((u) => u.class_name || ''));
 
   const filteredUsers = users.filter((u) => {
     if (!u) return false;
@@ -182,8 +177,12 @@ export const TeacherStudents: React.FC = () => {
             className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="all">Semua Kelas</option>
-            {classes.map((c) => (
-              <option key={c} value={c}>{c}</option>
+            {classGroups.map((g) => (
+              <optgroup key={g.label} label={g.label}>
+                {g.classes.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </optgroup>
             ))}
           </select>
         </div>
