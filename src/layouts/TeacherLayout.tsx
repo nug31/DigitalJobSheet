@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { AppLogo } from '../components/AppLogo';
 import { useAuth } from '../contexts/AuthContext';
 import { Storage, subscribeStorage, startCloudSync } from '../lib/storage';
 import {
-  BookOpen,
   BarChart3,
   FileText,
   Users,
@@ -64,9 +64,7 @@ export const TeacherLayout: React.FC<{ children: React.ReactNode }> = ({ childre
           {pendingCount > 0 && <span className="absolute top-1 right-1 h-2.5 w-2.5 rounded-full bg-rose-500" />}
         </button>
         <div className="flex items-center gap-2" onClick={() => navigate('/teacher/dashboard')}>
-          <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center">
-            <BookOpen className="w-4 h-4 text-white" />
-          </div>
+          <AppLogo className="h-8 w-8" />
           <span className="font-black text-slate-900 text-sm">
             MITRA <span className="text-blue-600">Job Sheet</span>
           </span>
@@ -96,9 +94,7 @@ export const TeacherLayout: React.FC<{ children: React.ReactNode }> = ({ childre
         {/* Brand Header */}
         <div className="h-16 flex items-center px-4 border-b border-slate-200 justify-between">
           <div className="flex items-center gap-3 overflow-hidden cursor-pointer" onClick={() => navigate('/teacher/dashboard')}>
-            <div className="h-9 w-9 bg-blue-600 rounded-xl flex items-center justify-center shrink-0 shadow-md shadow-blue-500/20">
-              <BookOpen className="w-5 h-5 text-white" />
-            </div>
+            <AppLogo className="h-9 w-9" />
             {showLabels && (
               <div className="min-w-0">
                 <span className="font-black text-slate-900 text-sm leading-none block">

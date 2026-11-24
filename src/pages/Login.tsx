@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AppLogo } from '../components/AppLogo';
 import { useAuth } from '../contexts/AuthContext';
 import { takePostLoginPath } from '../lib/redirect';
-import { BookOpen, AlertCircle, Loader2 } from 'lucide-react';
+import { AlertCircle, Loader2 } from 'lucide-react';
 
 export const Login: React.FC = () => {
   const [identifier, setIdentifier] = useState('');
@@ -46,8 +47,8 @@ export const Login: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 via-slate-50 to-white flex flex-col justify-center px-4 py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <div className="inline-flex p-3.5 bg-blue-600 rounded-2xl shadow-xl shadow-blue-500/25 mb-4">
-          <BookOpen className="h-9 w-9 text-white" />
+        <div className="inline-flex mb-4">
+          <AppLogo className="h-16 w-16 drop-shadow-lg" />
         </div>
         <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
           Mitra Digital Job Sheet

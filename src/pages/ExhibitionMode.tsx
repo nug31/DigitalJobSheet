@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AppLogo } from '../components/AppLogo';
 import { Storage, subscribeStorage, startCloudSync } from '../lib/storage';
 import type { Jobsheet, Submission } from '../types';
-import { BookOpen, Maximize2, Minimize2, X } from 'lucide-react';
+import { Maximize2, Minimize2, X } from 'lucide-react';
 
 const isToday = (iso?: string) => {
   if (!iso) return false;
@@ -174,9 +175,7 @@ export const ExhibitionMode: React.FC = () => {
       {/* Header */}
       <header className="flex items-center justify-between gap-4 px-4 sm:px-8 h-16 sm:h-20 border-b border-[#26282D]">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="h-9 w-9 sm:h-11 sm:w-11 rounded-md flex items-center justify-center shrink-0" style={{ background: ACCENT }}>
-            <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
-          </div>
+          <AppLogo className="h-9 w-9 sm:h-11 sm:w-11" />
           <div className="min-w-0">
             <p className="font-extrabold text-base sm:text-xl tracking-tight leading-none truncate">MITRA Digital Job Sheet</p>
             <p className={`${label} mt-1.5 truncate`}>Monitor Praktik Bengkel</p>

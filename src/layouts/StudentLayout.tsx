@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { AppLogo } from '../components/AppLogo';
 import { useAuth } from '../contexts/AuthContext';
 import { LogOut, BookOpen, Award, Home, User } from 'lucide-react';
 import { startCloudSync } from '../lib/storage';
@@ -33,9 +34,7 @@ export const StudentLayout: React.FC = () => {
             {/* Logo */}
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/student/dashboard')}>
-                <div className="h-9 w-9 bg-blue-600 rounded-xl flex items-center justify-center shadow-md shadow-blue-500/20">
-                  <BookOpen className="w-5 h-5 text-white" />
-                </div>
+                <AppLogo className="h-9 w-9" />
                 <div>
                   <span className="text-base font-black text-slate-900 leading-none block">
                     MITRA <span className="text-blue-600">Job Sheet</span>

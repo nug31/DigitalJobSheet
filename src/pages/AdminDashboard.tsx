@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { AppLogo } from '../components/AppLogo';
 import { useAuth } from '../contexts/AuthContext';
 import { Storage, subscribeStorage, startCloudSync } from '../lib/storage';
 import { useToast } from '../contexts/ToastContext';
 import type { UserProfile, ClassItem, SubjectItem } from '../types';
 import {
-  BookOpen,
   Users,
   Settings,
   BarChart3,
@@ -184,9 +184,7 @@ export const AdminDashboard: React.FC = () => {
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 sticky top-0 h-screen z-30">
         <div className="h-16 flex items-center px-5 border-b border-slate-200 gap-3">
-          <div className="h-9 w-9 bg-blue-600 rounded-xl flex items-center justify-center shadow-md shadow-blue-500/20">
-            <BookOpen className="w-5 h-5 text-white" />
-          </div>
+          <AppLogo className="h-9 w-9" />
           <div>
             <span className="font-black text-slate-900 text-sm block leading-tight">
               MITRA <span className="text-blue-600">Admin</span>
