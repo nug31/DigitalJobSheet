@@ -33,8 +33,21 @@ export const TeacherStudents: React.FC = () => {
     setSubmissions(Storage.getSubmissions());
 
     try {
-      const { data } = await supabase.from('profiles').select('*').eq('role', 'student');
-      if (data && data.length > 0) {
+      // Supabase returns at most 1000 rows per request, so page through all students
+      const PAGE = 1000;
+      const data: UserProfile[] = [];
+      for (let from = 0; ; from += PAGE) {
+        const { data: page, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('role', 'student')
+          .order('id')
+          .range(from, from + PAGE - 1);
+        if (error || !page) break;
+        data.push(...(page as UserProfile[]));
+        if (page.length < PAGE) break;
+      }
+      if (data.length > 0) {
         const map = new Map<string, UserProfile>();
         localList.forEach((u) => map.set(u.nis_nip || u.id, u));
         (data as UserProfile[]).forEach((u) => map.set(u.nis_nip || u.id, u));
